@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/signInFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.teacherassistant.ui.main.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment">
+        <argument
+            android:name="Role"
+            android:defaultValue="Student"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.teacherassistant.ui.main.SignInFragment"
+        android:label="sign_in_fragment"
+        tools:layout="@layout/sign_in_fragment">
+        <action
+            android:id="@+id/action_signInFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="com.example.teacherassistant.ui.main.GroupFragment"
+        android:label="group_fragment"
+        tools:layout="@layout/group_fragment">
+        <argument
+            android:name="GroupId"
+            android:defaultValue="0"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

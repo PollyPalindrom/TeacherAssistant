@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TeacherAssistant</string>
+    <string name="sign_in">Sign In</string>
+    <string name="role">Role</string>
+    <string name="name">Name</string>
+    <string name="title">title</string>
+    <string-array name="spinnerArray">
+        <item>Teacher</item>
+        <item>Student</item>
+    </string-array>
+</resources>
