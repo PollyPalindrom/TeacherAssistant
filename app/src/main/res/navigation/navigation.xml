@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/signInFragment">
+    app:startDestination="@id/entryFragment">
 
     <fragment
         android:id="@+id/mainFragment"
@@ -34,5 +34,10 @@
             android:defaultValue="0"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/entryFragment"
+        android:name="com.example.teacherassistant.ui.main.EntryFragment"
+        android:label="fragment_entry"
+        tools:layout="@layout/fragment_entry" />
 
 </navigation>
