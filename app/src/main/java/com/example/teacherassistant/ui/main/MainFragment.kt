@@ -77,10 +77,6 @@ class MainFragment : Fragment() {
                 Toast.makeText(requireContext(), "wrong", Toast.LENGTH_LONG).show()
             }
         }
-        codeDialog.setNegativeButton("Back")
-        { _, _ -> requireActivity().supportFragmentManager.popBackStack() }
-
-        requireActivity().supportFragmentManager.popBackStack()
         codeDialog.show()
     }
 }

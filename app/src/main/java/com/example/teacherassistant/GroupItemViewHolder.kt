@@ -9,5 +9,8 @@ class GroupItemViewHolder(private val binding: GroupItemBinding) :
     fun bind(group: Group) {
         binding.name.text = group.name
         binding.title.text = group.title
+        binding.root.setOnClickListener {
+
+        }
     }
 }
