@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.teacherassistant.R
-import com.example.teacherassistant.common.CheckRoleListener
+import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.SignInFragmentBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -22,7 +22,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SignInFragment : Fragment(), CheckRoleListener {
+class SignInFragment : Fragment(), OpenNextFragmentListener {
 
     private lateinit var binding: SignInFragmentBinding
     private lateinit var launcher: ActivityResultLauncher<Intent>
@@ -104,10 +104,10 @@ class SignInFragment : Fragment(), CheckRoleListener {
         }
     }
 
-    override fun openNextFragment(role: String) {
+    override fun openNextFragment(path: String) {
         if (viewModel.checkState()) {
             val bundle = Bundle()
-            bundle.putString("Role", role)
+            bundle.putString("Role", path)
             findNavController().navigate(R.id.mainFragment, bundle)
         }
     }

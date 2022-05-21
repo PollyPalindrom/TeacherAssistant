@@ -10,56 +10,50 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.teacherassistant.GroupAdapter
-import com.example.teacherassistant.R
-import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.GroupCreationWindowBinding
-import com.example.teacherassistant.databinding.MainFragmentBinding
+import com.example.teacherassistant.databinding.NotesFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainFragment : Fragment(),OpenNextFragmentListener {
+class NotesFragment : Fragment() {
 
-    private val viewModel by viewModels<MainViewModel>()
-    private lateinit var binding: MainFragmentBinding
-    private val groupAdapter = GroupAdapter()
-    private lateinit var groupBinding: GroupCreationWindowBinding
+    private lateinit var binding: NotesFragmentBinding
+    private val viewModel: NotesViewModel by viewModels<NotesViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = MainFragmentBinding.inflate(inflater, container, false)
+        binding = NotesFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getGroupList("User", "Group")
+        viewModel.getNoteList("User", "Group",,"Notes")
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.whenStarted {
-                viewModel.groupsListOpen.collect {
-                    if (it?.groups != null) {
-                        groupAdapter.submitList(it.groups)
-                        binding.GroupRecycler.scrollToPosition(0)
+                viewModel.noteListOpen.collect {
+                    if (it?.notes != null) {
+                        notesAdapter.submitList(it.notes)
+                        binding.NotesRecycler.scrollToPosition(0)
                     }
                 }
             }
         }
         binding.addGroupButton.setOnClickListener {
-            openCodeWindow()
+            openNoteWindow()
         }
-        binding.GroupRecycler.apply {
-            adapter = groupAdapter
+        binding.NotesRecycler.apply {
+            adapter = notesAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }
 
-    private fun openCodeWindow() {
+    private fun openNoteWindow() {
         val codeDialog = AlertDialog.Builder(requireContext())
             .setTitle("Group")
             .setMessage("Enter name and tittle of group")
@@ -83,11 +77,4 @@ class MainFragment : Fragment(),OpenNextFragmentListener {
         codeDialog.show()
     }
 
-    override fun openNextFragment(path: String) {
-        if (viewModel.checkState()) {
-            val bundle = Bundle()
-            bundle.putString("Role", path)
-            findNavController().navigate(R.id.mainFragment, bundle)
-        }
-    }
 }

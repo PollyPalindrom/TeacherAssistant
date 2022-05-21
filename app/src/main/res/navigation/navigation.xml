@@ -26,9 +26,9 @@
     </fragment>
     <fragment
         android:id="@+id/groupFragment"
-        android:name="com.example.teacherassistant.ui.main.GroupFragment"
+        android:name="com.example.teacherassistant.ui.main.NotesFragment"
         android:label="group_fragment"
-        tools:layout="@layout/group_fragment">
+        tools:layout="@layout/notes_fragment">
         <argument
             android:name="GroupId"
             android:defaultValue="0"

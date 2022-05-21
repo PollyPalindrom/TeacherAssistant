@@ -5,6 +5,7 @@ import com.example.teacherassistant.common.Group
 import com.example.teacherassistant.common.GroupsState
 import com.example.teacherassistant.domain.use_cases.GetCollectionReferenceForGroupInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForGroupInfoUseCase
+import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getDocumentReferenceForGroupInfoUseCase: GetDocumentReferenceForGroupInfoUseCase,
-    private val getCollectionReferenceForGroupInfoUseCase: GetCollectionReferenceForGroupInfoUseCase
+    private val getCollectionReferenceForGroupInfoUseCase: GetCollectionReferenceForGroupInfoUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) :
     ViewModel() {
     private val groupsList: MutableStateFlow<GroupsState?> = MutableStateFlow(null)
@@ -82,5 +84,9 @@ class MainViewModel @Inject constructor(
                     GroupsState(error = error.localizedMessage)
             }
         }
+    }
+
+    fun checkState(): Boolean {
+        return getUserInfoUseCase.getUserState()
     }
 }

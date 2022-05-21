@@ -1,7 +1,7 @@
 package com.example.teacherassistant.ui.main
 
 import androidx.lifecycle.ViewModel
-import com.example.teacherassistant.common.CheckRoleListener
+import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
@@ -55,7 +55,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun checkRole(listener: CheckRoleListener) {
+    fun checkRole(listener: OpenNextFragmentListener) {
         getDocumentReferenceForUserInfo("User")?.get()?.addOnSuccessListener {
             if (it.getString("isTeacher") == "1") {
                 listener.openNextFragment("Teacher")

@@ -1,41 +1,44 @@
-package com.example.teacherassistant.data.repository
+package com.example.teacherassistant.data.remote
 
 import com.example.teacherassistant.common.PushNotification
-import com.example.teacherassistant.data.remote.RemoteDataSource
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
-class Repository @Inject constructor(
-    private val remoteDataSource: RemoteDataSource
+class RemoteDataSource @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
+    private val messageApi: MessageApi
 ) {
     fun getCurrentUserFullName(): String? {
-        return remoteDataSource.getCurrentUserFullName()
+        return firebaseAuth.currentUser?.displayName
     }
 
     fun getCurrentUserEmail(): String? {
-        return remoteDataSource.getCurrentUserEmail()
+        return firebaseAuth.currentUser?.email
     }
 
     fun getCurrentUserUid(): String? {
-        return remoteDataSource.getCurrentUserUid()
+        return firebaseAuth.currentUser?.uid
     }
 
     fun getCurrentState(): Boolean {
-        return remoteDataSource.getCurrentState()
+        return firebaseAuth.currentUser != null
     }
 
     fun getDocumentReferenceForUserInfo(collectionPath: String, uid: String): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForUserInfo(collectionPath, uid)
+        return firestore.collection(collectionPath).document(uid)
     }
 
     fun getAuthResultForSignIn(credential: AuthCredential): Task<AuthResult> {
-        return remoteDataSource.getAuthResultForSignIn(credential)
+        return firebaseAuth.signInWithCredential(credential)
     }
 
     fun getDocumentReferenceForGroupInfo(
@@ -44,12 +47,8 @@ class Repository @Inject constructor(
         collectionSecondPath: String,
         groupId: String
     ): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId
-        )
+        return firestore.collection(collectionFirstPath).document(uid)
+            .collection(collectionSecondPath).document(groupId)
     }
 
     fun getCollectionReferenceForGroupInfo(
@@ -57,11 +56,8 @@ class Repository @Inject constructor(
         uid: String,
         collectionSecondPath: String
     ): CollectionReference {
-        return remoteDataSource.getCollectionReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath
-        )
+        return firestore.collection(collectionFirstPath).document(uid)
+            .collection(collectionSecondPath)
     }
 
     fun getDocumentReferenceForNoteInfo(
@@ -72,14 +68,9 @@ class Repository @Inject constructor(
         collectionThirdPath: String,
         noteId: String
     ): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForNoteInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId,
-            collectionThirdPath,
-            noteId
-        )
+        return firestore.collection(collectionFirstPath).document(uid)
+            .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
+            .document(noteId)
     }
 
     fun getCollectionReferenceForNoteInfo(
@@ -89,16 +80,9 @@ class Repository @Inject constructor(
         groupId: String,
         collectionThirdPath: String,
     ): CollectionReference {
-        return remoteDataSource.getCollectionReferenceForNoteInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId,
-            collectionThirdPath
-        )
+        return firestore.collection(collectionFirstPath).document(uid)
+            .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
     }
 
-    suspend fun postNotification(notification: PushNotification): Response<ResponseBody> =
-        remoteDataSource.postNotification(notification)
-
+    suspend fun postNotification(notification: PushNotification):Response<ResponseBody> = messageApi.postNotification(notification)
 }
