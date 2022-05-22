@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -26,7 +28,7 @@ class SignInViewModel @Inject constructor(
         return getUserInfoUseCase.getUserState()
     }
 
-    private fun getUserUid(): String? {
+    fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
     }
 
@@ -34,6 +36,7 @@ class SignInViewModel @Inject constructor(
         val userInfo: MutableMap<String, Any> = mutableMapOf()
         getUserInfoUseCase.getUserEmail()?.let { userInfo.put("Email", it) }
         getUserInfoUseCase.getUserFullName()?.let { userInfo.put("FullName", it) }
+        userInfo["Token"] = FirebaseMessaging.getInstance().token
         return userInfo
     }
 
@@ -42,6 +45,7 @@ class SignInViewModel @Inject constructor(
     }
 
     fun setUserInfo(userInfo: MutableMap<String, Any>, collectionPath: String) {
+
         val df = getDocumentReferenceForUserInfo(collectionPath)
         df?.set(userInfo)
     }

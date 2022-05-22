@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.teacherassistant.databinding.MainActivityBinding
 import com.example.teacherassistant.ui.main.MainActivityViewModel
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
         if (viewModel.getUserState()) {
             findNavController(R.id.my_host_activity).navigate(R.id.mainFragment)

@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/fragment_entry.xml" value="0.22826086956521738" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/group_creation_window.xml" value="0.25416666666666665" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/group_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/note_create_window.xml" value="0.253125" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/notes_fragment.xml" value="0.25416666666666665" />
         <entry key="..\:/TeacherAssistant/app/src/main/res/layout/group_creation_window.xml" value="0.22826086956521738" />
         <entry key="..\:/TeacherAssistant/app/src/main/res/layout/group_fragment.xml" value="0.22826086956521738" />
         <entry key="..\:/TeacherAssistant/app/src/main/res/layout/group_item.xml" value="0.22826086956521738" />

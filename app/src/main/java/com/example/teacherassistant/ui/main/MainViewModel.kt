@@ -3,10 +3,7 @@ package com.example.teacherassistant.ui.main
 import androidx.lifecycle.ViewModel
 import com.example.teacherassistant.common.Group
 import com.example.teacherassistant.common.GroupsState
-import com.example.teacherassistant.domain.use_cases.GetCollectionReferenceForGroupInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForGroupInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
+import com.example.teacherassistant.domain.use_cases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,13 +14,16 @@ class MainViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getDocumentReferenceForGroupInfoUseCase: GetDocumentReferenceForGroupInfoUseCase,
     private val getCollectionReferenceForGroupInfoUseCase: GetCollectionReferenceForGroupInfoUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getNoteInfoUseCase: GetNoteInfoUseCase,
+    private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase,
+    private val getDocumentReferenceForUserInfoUseCase: GetDocumentReferenceForUserInfoUseCase
 ) :
     ViewModel() {
     private val groupsList: MutableStateFlow<GroupsState?> = MutableStateFlow(null)
     val groupsListOpen: StateFlow<GroupsState?> = groupsList
 
-    private fun getUserUid(): String? {
+    fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
 
     }
@@ -88,5 +88,44 @@ class MainViewModel @Inject constructor(
 
     fun checkState(): Boolean {
         return getUserInfoUseCase.getUserState()
+    }
+
+    fun addStudent(
+        email: String,
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String
+    ) {
+        //сначала ищем в списке пользователей введённый email, если он сходится, берём токен, добавляем его как информационное поле в коллекции студентов
+        getCollectionReferenceForUserInfoUseCase.getCollectionReference(collectionFirstPath)
+            .addSnapshotListener { value, error ->
+                if (value != null) {
+                    for (user in value) {
+                        getDocumentReferenceForUserInfoUseCase.getDocumentReferenceForUserInfo(
+                            "User",
+                            user.id
+                        ).get().addOnSuccessListener {
+                            if (it.getString("Email") == email) {
+                                val token = it.getString("Token")
+                                if (token != null) {
+                                    val studentInfo: MutableMap<String, Any> = mutableMapOf()
+                                    studentInfo["Token"] = token
+                                    getUserUid()?.let { it1 ->
+                                        getNoteInfoUseCase.getDocumentReference(
+                                            collectionFirstPath,
+                                            it1,
+                                            collectionSecondPath,
+                                            groupId,
+                                            collectionThirdPath,
+                                            email
+                                        ).set(studentInfo)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
     }
 }

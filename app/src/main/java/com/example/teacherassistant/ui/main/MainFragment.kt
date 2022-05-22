@@ -12,27 +12,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.teacherassistant.GroupAdapter
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.GroupCreationWindowBinding
 import com.example.teacherassistant.databinding.MainFragmentBinding
+import com.example.teacherassistant.ui.main.recycler.GroupAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainFragment : Fragment(),OpenNextFragmentListener {
+class MainFragment : Fragment(), OpenNextFragmentListener {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: MainFragmentBinding
-    private val groupAdapter = GroupAdapter()
+    private val groupAdapter = GroupAdapter(this)
     private lateinit var groupBinding: GroupCreationWindowBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = MainFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,6 +48,12 @@ class MainFragment : Fragment(),OpenNextFragmentListener {
                         binding.GroupRecycler.scrollToPosition(0)
                     }
                 }
+            }
+        }
+        if (arguments?.getString("Role") != "Teacher") {
+            binding.addGroupButton.apply {
+                visibility = View.INVISIBLE
+                isClickable = false
             }
         }
         binding.addGroupButton.setOnClickListener {
@@ -86,8 +92,9 @@ class MainFragment : Fragment(),OpenNextFragmentListener {
     override fun openNextFragment(path: String) {
         if (viewModel.checkState()) {
             val bundle = Bundle()
-            bundle.putString("Role", path)
-            findNavController().navigate(R.id.mainFragment, bundle)
+            bundle.putString("GroupId", viewModel.getUserUid() + path)
+            bundle.putString("Role", arguments?.getString("Role"))
+            findNavController().navigate(R.id.notesFragment, bundle)
         }
     }
 }

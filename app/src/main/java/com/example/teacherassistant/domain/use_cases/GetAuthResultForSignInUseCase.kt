@@ -6,7 +6,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
 
-class GetAuthResultForSignInUseCase @Inject constructor(private  val repository: Repository) {
+class GetAuthResultForSignInUseCase @Inject constructor(private val repository: Repository) {
     fun getAuthResult(credential: AuthCredential): Task<AuthResult> {
         return repository.getAuthResultForSignIn(credential)
     }

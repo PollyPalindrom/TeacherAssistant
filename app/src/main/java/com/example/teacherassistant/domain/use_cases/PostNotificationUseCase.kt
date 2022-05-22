@@ -15,13 +15,13 @@ class PostNotificationUseCase @Inject constructor(private val repository: Reposi
         try {
             emit(Resource.Loading())
             val result = repository.postNotification(notification)
-            if(result.isSuccessful){
+            if (result.isSuccessful) {
                 emit(Resource.Success(Gson().toJson(result)))
             } else {
-                emit(Resource.Error("An unexpected error occured"))
+                emit(Resource.Error("An unexpected error occurred"))
             }
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occured"))
+            emit(Resource.Error(e.localizedMessage ?: "An unexpected error occurred"))
         } catch (e: IOException) {
             emit(
                 Resource.Error(

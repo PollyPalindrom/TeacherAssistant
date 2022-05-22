@@ -38,6 +38,10 @@ class Repository @Inject constructor(
         return remoteDataSource.getAuthResultForSignIn(credential)
     }
 
+    fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference {
+        return remoteDataSource.getCollectionReferenceForUserInfo(collectionPath)
+    }
+
     fun getDocumentReferenceForGroupInfo(
         collectionFirstPath: String,
         uid: String,

@@ -37,6 +37,10 @@ class RemoteDataSource @Inject constructor(
         return firestore.collection(collectionPath).document(uid)
     }
 
+    fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference {
+        return firestore.collection(collectionPath)
+    }
+
     fun getAuthResultForSignIn(credential: AuthCredential): Task<AuthResult> {
         return firebaseAuth.signInWithCredential(credential)
     }
@@ -84,5 +88,6 @@ class RemoteDataSource @Inject constructor(
             .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
     }
 
-    suspend fun postNotification(notification: PushNotification):Response<ResponseBody> = messageApi.postNotification(notification)
+    suspend fun postNotification(notification: PushNotification): Response<ResponseBody> =
+        messageApi.postNotification(notification)
 }
