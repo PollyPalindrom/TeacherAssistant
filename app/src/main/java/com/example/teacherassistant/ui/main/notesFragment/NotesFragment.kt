@@ -59,6 +59,22 @@ class NotesFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.whenStarted {
+                viewModel.notificationStateOpen.collect {
+                    if (it?.error == null) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.success),
+                            Toast.LENGTH_SHORT
+                        )
+                    } else {
+                        Toast.makeText(requireContext(), it.error, Toast.LENGTH_SHORT)
+                    }
+                }
+            }
+        }
+
         if (arguments?.getString(getString(R.string.role)) == getString(R.string.student)) {
             binding.addGroupButton.apply {
                 visibility = View.INVISIBLE

@@ -20,6 +20,8 @@
     <string name="note">Note</string>
     <string name="token">Token</string>
     <string name="isTeacher">isTeacher</string>
+    <string name="success">Success</string>
+    <string name="signInFailed">Sign In is failed</string>
     <string-array name="spinnerArray">
         <item>Teacher</item>
         <item>Student</item>

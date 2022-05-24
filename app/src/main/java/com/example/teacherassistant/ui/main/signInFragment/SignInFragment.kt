@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -101,7 +102,9 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
                 val userInfo = viewModel.getMapUserInfo()
                 FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
                     userInfo[getString(R.string.token)] = token
-                    if (binding.autoCompleteTextView.text.toString().isNotEmpty()) {
+                    if (binding.autoCompleteTextView.text.toString() == getString(R.string.teacher) ||
+                        binding.autoCompleteTextView.text.toString() == getString(R.string.student)
+                    ) {
                         if (binding.autoCompleteTextView.text.toString() == getString(R.string.teacher)) userInfo[getString(
                             R.string.isTeacher
                         )] =
@@ -114,7 +117,7 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
                     viewModel.setUserInfo(userInfo, getString(R.string.collectionFirstPath))
                 }
             } else {
-
+                Toast.makeText(requireContext(), getString(R.string.signInFailed), Toast.LENGTH_SHORT)
             }
         }
     }
