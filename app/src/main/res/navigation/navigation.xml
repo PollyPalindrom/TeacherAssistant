@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.teacherassistant.ui.main.MainFragment"
+        android:name="com.example.teacherassistant.ui.main.mainFragment.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment">
         <argument
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.teacherassistant.ui.main.SignInFragment"
+        android:name="com.example.teacherassistant.ui.main.signInFragment.SignInFragment"
         android:label="sign_in_fragment"
         tools:layout="@layout/sign_in_fragment">
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/notesFragment"
-        android:name="com.example.teacherassistant.ui.main.NotesFragment"
+        android:name="com.example.teacherassistant.ui.main.notesFragment.NotesFragment"
         android:label="group_fragment"
         tools:layout="@layout/notes_fragment">
         <argument
@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/entryFragment"
-        android:name="com.example.teacherassistant.ui.main.EntryFragment"
+        android:name="com.example.teacherassistant.ui.main.entryFragment.EntryFragment"
         android:label="fragment_entry"
         tools:layout="@layout/fragment_entry" />
 

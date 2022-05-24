@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main
+package com.example.teacherassistant.ui.main.signInFragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,7 +70,13 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
                 }
             }
         }
-        viewModel.checkRole(this)
+        viewModel.checkRole(this, getString(R.string.collectionFirstPath))
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finish()
+                }
+            })
     }
 
     private fun getClient(): GoogleSignInClient {
@@ -89,15 +97,22 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         viewModel.getAuthResult(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-                viewModel.checkRole(this)
+                viewModel.checkRole(this, getString(R.string.collectionFirstPath))
                 val userInfo = viewModel.getMapUserInfo()
-                if (binding.autoCompleteTextView.text.toString().isNotEmpty()) {
-                    if (binding.autoCompleteTextView.text.toString() == "Teacher") userInfo["isTeacher"] =
-                        "1"
-                    if (binding.autoCompleteTextView.text.toString() == "Student") userInfo["isTeacher"] =
-                        "0"
+                FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+                    userInfo[getString(R.string.token)] = token
+                    if (binding.autoCompleteTextView.text.toString().isNotEmpty()) {
+                        if (binding.autoCompleteTextView.text.toString() == getString(R.string.teacher)) userInfo[getString(
+                            R.string.isTeacher
+                        )] =
+                            "1"
+                        if (binding.autoCompleteTextView.text.toString() == getString(R.string.student)) userInfo[getString(
+                            R.string.isTeacher
+                        )] =
+                            "0"
+                    }
+                    viewModel.setUserInfo(userInfo, getString(R.string.collectionFirstPath))
                 }
-                viewModel.setUserInfo(userInfo, "User")
             } else {
 
             }
@@ -107,7 +122,7 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
     override fun openNextFragment(path: String) {
         if (viewModel.checkState()) {
             val bundle = Bundle()
-            bundle.putString("Role", path)
+            bundle.putString(getString(R.string.role), path)
             findNavController().navigate(R.id.mainFragment, bundle)
         }
     }

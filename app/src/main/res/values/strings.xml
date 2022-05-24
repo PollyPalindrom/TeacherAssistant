@@ -4,10 +4,31 @@
     <string name="role">Role</string>
     <string name="name">Name</string>
     <string name="title">title</string>
+    <string name="teacher">Teacher</string>
+    <string name="student">Student</string>
+    <string name="collectionSecondPath">Group</string>
+    <string name="collectionFirstPath">User</string>
+    <string name="collectionThirdPath">Notes</string>
+    <string name="collectionThirdPathStudents">Students</string>
+    <string name="groupWindowMessage">Enter name and tittle of group</string>
+    <string name="noteWindowMessage">Enter title and text of note</string>
+    <string name="emailWindowTitle">Students email</string>
+    <string name="sharedPref">sharedPref</string>
+    <string name="positiveButton">OK</string>
+    <string name="textErrorMessage">Wrong</string>
+    <string name="GroupId">GroupId</string>
+    <string name="note">Note</string>
+    <string name="token">Token</string>
+    <string name="isTeacher">isTeacher</string>
     <string-array name="spinnerArray">
         <item>Teacher</item>
         <item>Student</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="teacher_assistant">Teacher assistant</string>
+    <string name="add_new_group">Add new group</string>
+    <string name="add_new_note">Add new note</string>
+    <string name="email">Email</string>
+    <string name="add_new_student">Add new student</string>
 </resources>

@@ -3,7 +3,7 @@ package com.example.teacherassistant.common
 class Constants {
     companion object{
         const val BASE_URL="https://fcm.googleapis.com"
-        const val SERVER_KEY ="AAAA8Ost9zg:APA91bE3DnRuKCWkTaanS-eMsYgx34IGPXsTGh62_9e3AA8RlfsKvLR7S70SHawfmx70yvnzgWmhw9HXJs5MoMTu8AAigzw9xwmNWk8yyAsB8XZcgvZNEf5DryoanjoElb9cNRU8unge"
+        const val SERVER_KEY ="AAAARW08MiM:APA91bGfINdN_unQja0wnr2FJoZeXUUe4NMbyU25ls8hLm1wvZepfiiGj8NvQkAvzVBzYgGUKkCm-1eWrE8B3oBS0JLSaRInjlykx9QGorfRPjmAr0AHdKdmh3doYDlEaAe6Ygt6KJ2C"
         const val CONTENT_TYPE="application/json"
 
     }

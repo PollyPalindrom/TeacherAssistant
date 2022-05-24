@@ -1,16 +1,16 @@
-package com.example.teacherassistant
+package com.example.teacherassistant.ui.main.mainActivity
 
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import com.example.teacherassistant.R
+import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.MainActivityBinding
-import com.example.teacherassistant.ui.main.MainActivityViewModel
-import com.google.firebase.iid.FirebaseInstanceIdReceiver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OpenNextFragmentListener {
 
     private lateinit var binding: MainActivityBinding
     private val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
@@ -21,9 +21,15 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         if (viewModel.getUserState()) {
-            findNavController(R.id.my_host_activity).navigate(R.id.mainFragment)
+            viewModel.checkRole(this, getString(R.string.collectionFirstPath))
         } else {
             findNavController(R.id.my_host_activity).navigate(R.id.signInFragment)
         }
+    }
+
+    override fun openNextFragment(path: String) {
+        val bundle = Bundle()
+        bundle.putString(getString(R.string.role), path)
+        findNavController(R.id.my_host_activity).navigate(R.id.mainFragment, bundle)
     }
 }

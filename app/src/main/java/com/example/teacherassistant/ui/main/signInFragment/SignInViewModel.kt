@@ -1,6 +1,7 @@
-package com.example.teacherassistant.ui.main
+package com.example.teacherassistant.ui.main.signInFragment
 
 import androidx.lifecycle.ViewModel
+import com.example.teacherassistant.common.CheckRoleManager
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForUserInfoUseCase
@@ -10,8 +11,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -23,12 +22,13 @@ class SignInViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase
 ) :
     ViewModel() {
+    private val checkRoleManager = CheckRoleManager
 
     fun checkState(): Boolean {
         return getUserInfoUseCase.getUserState()
     }
 
-    fun getUserUid(): String? {
+    private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
     }
 
@@ -36,7 +36,6 @@ class SignInViewModel @Inject constructor(
         val userInfo: MutableMap<String, Any> = mutableMapOf()
         getUserInfoUseCase.getUserEmail()?.let { userInfo.put("Email", it) }
         getUserInfoUseCase.getUserFullName()?.let { userInfo.put("FullName", it) }
-        userInfo["Token"] = FirebaseMessaging.getInstance().token
         return userInfo
     }
 
@@ -59,14 +58,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun checkRole(listener: OpenNextFragmentListener) {
-        getDocumentReferenceForUserInfo("User")?.get()?.addOnSuccessListener {
-            if (it.getString("isTeacher") == "1") {
-                listener.openNextFragment("Teacher")
-            }
-            if (it.getString("isTeacher") == "0") {
-                listener.openNextFragment("Student")
-            }
-        }
+    fun checkRole(listener: OpenNextFragmentListener, collectionFirstPath: String) {
+        checkRoleManager.checkRole(listener, getDocumentReferenceForUserInfo(collectionFirstPath))
     }
 }

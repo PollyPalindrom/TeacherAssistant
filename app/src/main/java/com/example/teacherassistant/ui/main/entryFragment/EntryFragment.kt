@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main
+package com.example.teacherassistant.ui.main.entryFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

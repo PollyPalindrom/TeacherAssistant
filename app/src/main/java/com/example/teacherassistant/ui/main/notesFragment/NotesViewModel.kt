@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main
+package com.example.teacherassistant.ui.main.notesFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -85,10 +85,13 @@ class NotesViewModel @Inject constructor(
             ).addSnapshotListener { valueStudents, errorStudents ->
                 if (valueStudents != null) {
                     for (student in valueStudents) {
-                        getCollectionReferenceForUserInfo("User")?.addSnapshotListener { value, error ->
+                        getCollectionReferenceForUserInfo(collectionFirstPath)?.addSnapshotListener { value, error ->
                             if (value != null) {
                                 for (user in value) {
-                                    getDocumentReferenceForUserInfo("User", user.id)?.get()
+                                    getDocumentReferenceForUserInfo(
+                                        collectionFirstPath,
+                                        user.id
+                                    )?.get()
                                         ?.addOnSuccessListener {
                                             if (it.getString("Email") == student.id) {
                                                 val token = it.getString("Token")
@@ -113,33 +116,29 @@ class NotesViewModel @Inject constructor(
         collectionThirdPath: String,
     ) {
 
-        val notesId = mutableListOf<String>()
         val notes = mutableListOf<Note>()
-        getUserUid()?.let { it2 ->
+        getUserUid()?.let { uid ->
             getNoteInfoUseCase.getCollectionReference(
                 collectionFirstPath,
-                it2,
+                uid,
                 collectionSecondPath,
                 groupId,
                 collectionThirdPath
             ).addSnapshotListener { value, error ->
                 if (value != null) {
                     for (note in value) {
-                        notesId.add(note.id)
-                    }
-                    notesId.forEach {
                         getNoteInfoUseCase.getDocumentReference(
                             collectionFirstPath,
-                            it2,
+                            uid,
                             collectionSecondPath,
                             groupId,
                             collectionThirdPath,
-                            it
-                        ).get().addOnSuccessListener { it1 ->
-                            val text = it1.getString("Text")
-                            val title = it1.getString("Title")
+                            note.id
+                        ).get().addOnSuccessListener { noteInfo ->
+                            val text = noteInfo.getString("Text")
+                            val title = noteInfo.getString("Title")
                             if (text != null && title != null) {
-                                notes.add(Note(text, title, it))
+                                notes.add(Note(title, text, note.id))
                                 noteList.value = NotesState(notes)
                             }
                         }

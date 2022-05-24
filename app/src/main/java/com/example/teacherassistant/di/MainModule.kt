@@ -2,6 +2,7 @@ package com.example.teacherassistant.di
 
 import com.example.teacherassistant.common.Constants.Companion.BASE_URL
 import com.example.teacherassistant.data.remote.MessageApi
+import com.example.teacherassistant.data.remote.RemoteDataSource
 import com.example.teacherassistant.data.repository.Repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,14 +20,12 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideRepo(
+    fun provideRemoteDataSource(
+        firestore: FirebaseFirestore,
         firebaseAuth: FirebaseAuth,
-        fireStore: FirebaseFirestore
-    ): Repository {
-        return Repository(
-            firebaseAuth,
-            fireStore
-        )
+        messageApi: MessageApi
+    ): RemoteDataSource {
+        return RemoteDataSource(firebaseAuth, firestore, messageApi)
     }
 
     @Provides
@@ -43,7 +42,7 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideWeatherApi(): MessageApi {
+    fun provideMessageApi(): MessageApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

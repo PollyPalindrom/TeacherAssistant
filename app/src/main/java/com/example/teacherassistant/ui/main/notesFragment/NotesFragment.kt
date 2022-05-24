@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main
+package com.example.teacherassistant.ui.main.notesFragment
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.teacherassistant.R
 import com.example.teacherassistant.databinding.NoteCreateWindowBinding
 import com.example.teacherassistant.databinding.NotesFragmentBinding
 import com.example.teacherassistant.ui.main.recycler.NoteAdapter
@@ -36,7 +39,14 @@ class NotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("GroupId")?.let { viewModel.getNoteList("User", "Group", it, "Notes") }
+        arguments?.getString(getString(R.string.GroupId))?.let {
+            viewModel.getNoteList(
+                getString(R.string.collectionFirstPath),
+                getString(R.string.collectionSecondPath),
+                it,
+                getString(R.string.collectionThirdPath)
+            )
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.whenStarted {
                 viewModel.noteListOpen.collect {
@@ -48,7 +58,7 @@ class NotesFragment : Fragment() {
             }
         }
 
-        if (arguments?.getString("Role") != "Teacher") {
+        if (arguments?.getString(getString(R.string.role)) == getString(R.string.student)) {
             binding.addGroupButton.apply {
                 visibility = View.INVISIBLE
                 isClickable = false
@@ -62,31 +72,41 @@ class NotesFragment : Fragment() {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(context)
         }
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().popBackStack()
+                }
+            })
     }
 
     private fun openNoteWindow() {
         val codeDialog = AlertDialog.Builder(requireContext())
-            .setTitle("Group")
-            .setMessage("Enter name and tittle of group")
+            .setTitle(getString(R.string.note))
+            .setMessage(getString(R.string.noteWindowMessage))
         noteBinding = NoteCreateWindowBinding.inflate(LayoutInflater.from(requireContext()))
         codeDialog.setView(noteBinding.root)
-        codeDialog.setPositiveButton("Ok")
+        codeDialog.setPositiveButton(getString(R.string.positiveButton))
         { _, _ ->
             if (noteBinding.titleField.text.toString()
                     .isNotBlank() && noteBinding.textField.text.toString().isNotBlank()
             ) {
-                arguments?.getString("GroupId")?.let {
+                arguments?.getString(getString(R.string.GroupId))?.let {
                     viewModel.createNote(
-                        "User",
-                        "Group",
-                        "Notes",
+                        getString(R.string.collectionFirstPath),
+                        getString(R.string.collectionSecondPath),
+                        getString(R.string.collectionThirdPath),
                         it,
                         noteBinding.titleField.text.toString(),
                         noteBinding.textField.text.toString()
                     )
                 }
             } else {
-                Toast.makeText(requireContext(), "wrong", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.textErrorMessage),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         codeDialog.show()
