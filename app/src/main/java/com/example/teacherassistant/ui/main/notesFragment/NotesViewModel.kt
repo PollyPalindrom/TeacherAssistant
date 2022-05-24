@@ -3,9 +3,10 @@ package com.example.teacherassistant.ui.main.notesFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.*
-import com.example.teacherassistant.domain.use_cases.*
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
+import com.example.teacherassistant.domain.use_cases.GetCollectionReferenceForUserInfoUseCase
+import com.example.teacherassistant.domain.use_cases.GetNoteInfoUseCase
+import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
+import com.example.teacherassistant.domain.use_cases.PostNotificationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,6 @@ class NotesViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getNoteInfoUseCase: GetNoteInfoUseCase,
     private val postNotificationUseCase: PostNotificationUseCase,
-    private val getDocumentReferenceForUserInfoUseCase: GetDocumentReferenceForUserInfoUseCase,
     private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase
 ) : ViewModel() {
     private val noteList: MutableStateFlow<NotesState?> = MutableStateFlow(null)
@@ -32,26 +32,6 @@ class NotesViewModel @Inject constructor(
     private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
 
-    }
-
-    private fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference? {
-        return getUserUid()?.let {
-            getCollectionReferenceForUserInfoUseCase.getCollectionReference(
-                collectionPath
-            )
-        }
-    }
-
-    private fun getDocumentReferenceForUserInfo(
-        collectionPath: String,
-        uid: String
-    ): DocumentReference? {
-        return getUserUid()?.let {
-            getDocumentReferenceForUserInfoUseCase.getDocumentReferenceForUserInfo(
-                collectionPath,
-                uid
-            )
-        }
     }
 
     fun createNote(
@@ -75,6 +55,13 @@ class NotesViewModel @Inject constructor(
                 groupId + title
             ).set(noteInfo)
         }
+        updateStudentNotes(
+            collectionFirstPath,
+            collectionSecondPath,
+            collectionThirdPath,
+            groupId,
+            noteInfo
+        )
         getUserUid()?.let { id ->
             getNoteInfoUseCase.getCollectionReference(
                 collectionFirstPath,
@@ -82,41 +69,59 @@ class NotesViewModel @Inject constructor(
                 collectionSecondPath,
                 groupId,
                 "Students"
-            ).addSnapshotListener { valueStudents, errorStudents ->
-                if (valueStudents != null) {
-                    for (student in valueStudents) {
-                        getCollectionReferenceForUserInfo(collectionFirstPath)?.addSnapshotListener { value, error ->
-                            if (value != null) {
-                                for (user in value) {
-                                    getDocumentReferenceForUserInfo(
-                                        collectionFirstPath,
-                                        user.id
-                                    )?.get()
-                                        ?.addOnSuccessListener {
-                                            if (it.getString("Email") == student.id) {
-                                                val token = it.getString("Token")
-                                                if (token != null) {
-                                                    postNotification(title, token, text)
-                                                }
-                                            }
-                                        }
-                                }
+            ).get().addOnSuccessListener { valueStudents ->
+                for (student in valueStudents) {
+                    postNotification(title, student.data["Token"].toString(), text)
+                }
+            }
+        }
+    }
+
+
+    private fun updateStudentNotes(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        collectionThirdPath: String,
+        groupId: String,
+        noteInfo: MutableMap<String, Any>
+    ) {
+        getUserUid()?.let {
+            getNoteInfoUseCase.getCollectionReference(
+                collectionFirstPath,
+                it,
+                collectionSecondPath,
+                groupId,
+                "Students"
+            ).get().addOnSuccessListener { students ->
+                for (student in students) {
+                    getCollectionReferenceForUserInfoUseCase.getCollectionReference(
+                        collectionFirstPath
+                    ).get().addOnSuccessListener { users ->
+                        for (user in users) {
+                            if (user.data["Email"] == student.id) {
+                                getNoteInfoUseCase.getDocumentReference(
+                                    collectionFirstPath,
+                                    user.id,
+                                    collectionSecondPath,
+                                    groupId,
+                                    collectionThirdPath,
+                                    groupId + noteInfo["Title"]
+                                ).set(noteInfo)
                             }
                         }
+
                     }
                 }
             }
         }
     }
 
-    fun getNoteList(
+    fun subscribeNoteListChanges(
         collectionFirstPath: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
     ) {
-
-        val notes = mutableListOf<Note>()
         getUserUid()?.let { uid ->
             getNoteInfoUseCase.getCollectionReference(
                 collectionFirstPath,
@@ -125,24 +130,17 @@ class NotesViewModel @Inject constructor(
                 groupId,
                 collectionThirdPath
             ).addSnapshotListener { value, error ->
+                println(value?.size())
                 if (value != null) {
+                    val notes = mutableListOf<Note>()
                     for (note in value) {
-                        getNoteInfoUseCase.getDocumentReference(
-                            collectionFirstPath,
-                            uid,
-                            collectionSecondPath,
-                            groupId,
-                            collectionThirdPath,
-                            note.id
-                        ).get().addOnSuccessListener { noteInfo ->
-                            val text = noteInfo.getString("Text")
-                            val title = noteInfo.getString("Title")
-                            if (text != null && title != null) {
-                                notes.add(Note(title, text, note.id))
-                                noteList.value = NotesState(notes)
-                            }
-                        }
+                        println(note.data)
+                        val title = note.data["Title"].toString()
+                        val text = note.data["Text"].toString()
+                        notes.add(Note(title, text, note.id))
                     }
+                    noteList.value = NotesState(notes)
+                    println(notes)
                 }
                 if (error?.localizedMessage != null) noteList.value =
                     NotesState(error = error.localizedMessage)

@@ -40,13 +40,14 @@ class NotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getString(getString(R.string.GroupId))?.let {
-            viewModel.getNoteList(
+            viewModel.subscribeNoteListChanges(
                 getString(R.string.collectionFirstPath),
                 getString(R.string.collectionSecondPath),
                 it,
                 getString(R.string.collectionThirdPath)
             )
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.whenStarted {
                 viewModel.noteListOpen.collect {
@@ -72,6 +73,7 @@ class NotesFragment : Fragment() {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(context)
         }
+
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {

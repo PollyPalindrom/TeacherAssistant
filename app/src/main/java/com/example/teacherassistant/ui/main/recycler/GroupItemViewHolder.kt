@@ -20,7 +20,7 @@ class GroupItemViewHolder(
             listener.openNextFragment(group.id)
         }
         binding.addStudent.setOnClickListener {
-            dialogWindowListener.openEmailWindow(group.id)
+            dialogWindowListener.openEmailWindow(group.id, group.title, group.name)
         }
         if (role == "Student") {
             binding.addStudent.apply {

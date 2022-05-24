@@ -46,11 +46,6 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val groupAdapter = arguments?.getString("Role")?.let { GroupAdapter(this, this, it) }
-        viewModel.getStudentsGroups(
-            getString(R.string.collectionFirstPath),
-            getString(R.string.collectionSecondPath),
-            getString(R.string.collectionThirdPathStudents)
-        )
         FirebaseService.sharedPref =
             requireActivity().getSharedPreferences(
                 getString(R.string.sharedPref),
@@ -65,11 +60,11 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
                 getString(R.string.collectionThirdPathStudents)
             )
         }
-
-        viewModel.getGroupList(
+        viewModel.subscribeGroupListChanges(
             getString(R.string.collectionFirstPath),
             getString(R.string.collectionSecondPath)
         )
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.whenStarted {
                 viewModel.groupsListOpen.collect {
@@ -141,7 +136,7 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
         }
     }
 
-    override fun openEmailWindow(id: String) {
+    override fun openEmailWindow(id: String, title: String, name: String) {
         val codeDialog = AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.emailWindowTitle))
         emailBinding = EmailWindowBinding.inflate(LayoutInflater.from(requireContext()))
@@ -154,7 +149,8 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
                     getString(R.string.collectionFirstPath),
                     getString(R.string.collectionSecondPath),
                     id,
-                    getString(R.string.collectionThirdPathStudents)
+                    getString(R.string.collectionThirdPathStudents),
+                    title, name
                 )
             } else {
                 Toast.makeText(
