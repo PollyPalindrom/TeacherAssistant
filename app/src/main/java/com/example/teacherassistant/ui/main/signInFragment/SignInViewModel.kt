@@ -1,6 +1,7 @@
 package com.example.teacherassistant.ui.main.signInFragment
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.CheckRoleManager
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
@@ -12,6 +13,8 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.DocumentReference
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,9 +47,10 @@ class SignInViewModel @Inject constructor(
     }
 
     fun setUserInfo(userInfo: MutableMap<String, Any>, collectionPath: String) {
-
-        val df = getDocumentReferenceForUserInfo(collectionPath)
-        df?.set(userInfo)
+        viewModelScope.launch(Dispatchers.IO) {
+            val df = getDocumentReferenceForUserInfo(collectionPath)
+            df?.set(userInfo)
+        }
     }
 
     private fun getDocumentReferenceForUserInfo(collectionPath: String): DocumentReference? {

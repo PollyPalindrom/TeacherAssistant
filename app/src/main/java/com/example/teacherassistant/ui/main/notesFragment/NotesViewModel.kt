@@ -42,36 +42,38 @@ class NotesViewModel @Inject constructor(
         title: String,
         text: String
     ) {
-        val noteInfo: MutableMap<String, Any> = mutableMapOf()
-        noteInfo["Title"] = title
-        noteInfo["Text"] = text
-        getUserUid()?.let { it1 ->
-            getNoteInfoUseCase.getDocumentReference(
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteInfo: MutableMap<String, Any> = mutableMapOf()
+            noteInfo["Title"] = title
+            noteInfo["Text"] = text
+            getUserUid()?.let { it1 ->
+                getNoteInfoUseCase.getDocumentReference(
+                    collectionFirstPath,
+                    it1,
+                    collectionSecondPath,
+                    groupId,
+                    collectionThirdPath,
+                    groupId + title
+                ).set(noteInfo)
+            }
+            updateStudentNotes(
                 collectionFirstPath,
-                it1,
                 collectionSecondPath,
-                groupId,
                 collectionThirdPath,
-                groupId + title
-            ).set(noteInfo)
-        }
-        updateStudentNotes(
-            collectionFirstPath,
-            collectionSecondPath,
-            collectionThirdPath,
-            groupId,
-            noteInfo
-        )
-        getUserUid()?.let { id ->
-            getNoteInfoUseCase.getCollectionReference(
-                collectionFirstPath,
-                id,
-                collectionSecondPath,
                 groupId,
-                "Students"
-            ).get().addOnSuccessListener { valueStudents ->
-                for (student in valueStudents) {
-                    postNotification(title, student.data["Token"].toString(), text)
+                noteInfo
+            )
+            getUserUid()?.let { id ->
+                getNoteInfoUseCase.getCollectionReference(
+                    collectionFirstPath,
+                    id,
+                    collectionSecondPath,
+                    groupId,
+                    "Students"
+                ).get().addOnSuccessListener { valueStudents ->
+                    for (student in valueStudents) {
+                        postNotification(title, student.data["Token"].toString(), text)
+                    }
                 }
             }
         }
@@ -85,31 +87,33 @@ class NotesViewModel @Inject constructor(
         groupId: String,
         noteInfo: MutableMap<String, Any>
     ) {
-        getUserUid()?.let {
-            getNoteInfoUseCase.getCollectionReference(
-                collectionFirstPath,
-                it,
-                collectionSecondPath,
-                groupId,
-                "Students"
-            ).get().addOnSuccessListener { students ->
-                for (student in students) {
-                    getCollectionReferenceForUserInfoUseCase.getCollectionReference(
-                        collectionFirstPath
-                    ).get().addOnSuccessListener { users ->
-                        for (user in users) {
-                            if (user.data["Email"] == student.id) {
-                                getNoteInfoUseCase.getDocumentReference(
-                                    collectionFirstPath,
-                                    user.id,
-                                    collectionSecondPath,
-                                    groupId,
-                                    collectionThirdPath,
-                                    groupId + noteInfo["Title"]
-                                ).set(noteInfo)
+        viewModelScope.launch(Dispatchers.IO) {
+            getUserUid()?.let {
+                getNoteInfoUseCase.getCollectionReference(
+                    collectionFirstPath,
+                    it,
+                    collectionSecondPath,
+                    groupId,
+                    "Students"
+                ).get().addOnSuccessListener { students ->
+                    for (student in students) {
+                        getCollectionReferenceForUserInfoUseCase.getCollectionReference(
+                            collectionFirstPath
+                        ).get().addOnSuccessListener { users ->
+                            for (user in users) {
+                                if (user.data["Email"] == student.id) {
+                                    getNoteInfoUseCase.getDocumentReference(
+                                        collectionFirstPath,
+                                        user.id,
+                                        collectionSecondPath,
+                                        groupId,
+                                        collectionThirdPath,
+                                        groupId + noteInfo["Title"]
+                                    ).set(noteInfo)
+                                }
                             }
-                        }
 
+                        }
                     }
                 }
             }
@@ -122,28 +126,30 @@ class NotesViewModel @Inject constructor(
         groupId: String,
         collectionThirdPath: String,
     ) {
-        getUserUid()?.let { uid ->
-            getNoteInfoUseCase.getCollectionReference(
-                collectionFirstPath,
-                uid,
-                collectionSecondPath,
-                groupId,
-                collectionThirdPath
-            ).addSnapshotListener { value, error ->
-                println(value?.size())
-                if (value != null) {
-                    val notes = mutableListOf<Note>()
-                    for (note in value) {
-                        println(note.data)
-                        val title = note.data["Title"].toString()
-                        val text = note.data["Text"].toString()
-                        notes.add(Note(title, text, note.id))
+        viewModelScope.launch(Dispatchers.IO) {
+            getUserUid()?.let { uid ->
+                getNoteInfoUseCase.getCollectionReference(
+                    collectionFirstPath,
+                    uid,
+                    collectionSecondPath,
+                    groupId,
+                    collectionThirdPath
+                ).addSnapshotListener { value, error ->
+                    println(value?.size())
+                    if (value != null) {
+                        val notes = mutableListOf<Note>()
+                        for (note in value) {
+                            println(note.data)
+                            val title = note.data["Title"].toString()
+                            val text = note.data["Text"].toString()
+                            notes.add(Note(title, text, note.id))
+                        }
+                        noteList.value = NotesState(notes)
+                        println(notes)
                     }
-                    noteList.value = NotesState(notes)
-                    println(notes)
+                    if (error?.localizedMessage != null) noteList.value =
+                        NotesState(error = error.localizedMessage)
                 }
-                if (error?.localizedMessage != null) noteList.value =
-                    NotesState(error = error.localizedMessage)
             }
         }
     }
