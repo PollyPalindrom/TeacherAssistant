@@ -14,6 +14,7 @@ import androidx.lifecycle.whenStarted
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.databinding.NoteCreateWindowBinding
 import com.example.teacherassistant.databinding.NotesFragmentBinding
 import com.example.teacherassistant.ui.main.recycler.NoteAdapter
@@ -39,12 +40,12 @@ class NotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString(getString(R.string.GroupId))?.let {
+        arguments?.getString(Constants.GROUP_ID)?.let {
             viewModel.subscribeNoteListChanges(
-                getString(R.string.collectionFirstPath),
-                getString(R.string.collectionSecondPath),
+                Constants.COLLECTION_FIRST_PATH,
+                Constants.COLLECTION_SECOND_PATH,
                 it,
-                getString(R.string.collectionThirdPath)
+                Constants.COLLECTION_THIRD_PATH
             )
         }
 
@@ -75,7 +76,7 @@ class NotesFragment : Fragment() {
             }
         }
 
-        if (arguments?.getString(getString(R.string.role)) == getString(R.string.student)) {
+        if (arguments?.getString(Constants.ROLE) == Constants.STUDENT) {
             binding.addGroupButton.apply {
                 visibility = View.INVISIBLE
                 isClickable = false
@@ -109,11 +110,11 @@ class NotesFragment : Fragment() {
             if (noteBinding.titleField.text.toString()
                     .isNotBlank() && noteBinding.textField.text.toString().isNotBlank()
             ) {
-                arguments?.getString(getString(R.string.GroupId))?.let {
+                arguments?.getString(Constants.GROUP_ID)?.let {
                     viewModel.createNote(
-                        getString(R.string.collectionFirstPath),
-                        getString(R.string.collectionSecondPath),
-                        getString(R.string.collectionThirdPath),
+                        Constants.COLLECTION_FIRST_PATH,
+                        Constants.COLLECTION_SECOND_PATH,
+                        Constants.COLLECTION_THIRD_PATH,
                         it,
                         noteBinding.titleField.text.toString(),
                         noteBinding.textField.text.toString()

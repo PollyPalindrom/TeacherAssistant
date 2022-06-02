@@ -44,8 +44,8 @@ class NotesViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteInfo: MutableMap<String, Any> = mutableMapOf()
-            noteInfo["Title"] = title
-            noteInfo["Text"] = text
+            noteInfo[Constants.TITLE] = title
+            noteInfo[Constants.TEXT] = text
             getUserUid()?.let { it1 ->
                 getNoteInfoUseCase.getDocumentReference(
                     collectionFirstPath,
@@ -69,10 +69,10 @@ class NotesViewModel @Inject constructor(
                     id,
                     collectionSecondPath,
                     groupId,
-                    "Students"
+                    Constants.COLLECTION_THIRD_PATH_STUDENTS
                 ).get().addOnSuccessListener { valueStudents ->
                     for (student in valueStudents) {
-                        postNotification(title, student.data["Token"].toString(), text)
+                        postNotification(title, student.data[Constants.TOKEN].toString(), text)
                     }
                 }
             }
@@ -94,21 +94,21 @@ class NotesViewModel @Inject constructor(
                     it,
                     collectionSecondPath,
                     groupId,
-                    "Students"
+                    Constants.COLLECTION_THIRD_PATH_STUDENTS
                 ).get().addOnSuccessListener { students ->
                     for (student in students) {
                         getCollectionReferenceForUserInfoUseCase.getCollectionReference(
                             collectionFirstPath
                         ).get().addOnSuccessListener { users ->
                             for (user in users) {
-                                if (user.data["Email"] == student.id) {
+                                if (user.data[Constants.EMAIL] == student.id) {
                                     getNoteInfoUseCase.getDocumentReference(
                                         collectionFirstPath,
                                         user.id,
                                         collectionSecondPath,
                                         groupId,
                                         collectionThirdPath,
-                                        groupId + noteInfo["Title"]
+                                        groupId + noteInfo[Constants.TITLE]
                                     ).set(noteInfo)
                                 }
                             }
@@ -140,8 +140,8 @@ class NotesViewModel @Inject constructor(
                         val notes = mutableListOf<Note>()
                         for (note in value) {
                             println(note.data)
-                            val title = note.data["Title"].toString()
-                            val text = note.data["Text"].toString()
+                            val title = note.data[Constants.TITLE].toString()
+                            val text = note.data[Constants.TEXT].toString()
                             notes.add(Note(title, text, note.id))
                         }
                         noteList.value = NotesState(notes)
@@ -164,7 +164,7 @@ class NotesViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         notificationState.value = NotificationState(
-                            error = result.message ?: "An unexpected error occurred"
+                            error = result.message ?: Constants.UNEXPECTED_ERROR
                         )
                     }
                 }

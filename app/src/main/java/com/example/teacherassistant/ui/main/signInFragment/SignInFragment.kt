@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.SignInFragmentBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -71,7 +72,7 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
                 }
             }
         }
-        viewModel.checkRole(this, getString(R.string.collectionFirstPath))
+        viewModel.checkRole(this, Constants.COLLECTION_FIRST_PATH)
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -98,26 +99,26 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         viewModel.getAuthResult(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-                viewModel.checkRole(this, getString(R.string.collectionFirstPath))
+                viewModel.checkRole(this, Constants.COLLECTION_FIRST_PATH)
                 val userInfo = viewModel.getMapUserInfo()
                 FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-                    userInfo[getString(R.string.token)] = token
-                    if (binding.autoCompleteTextView.text.toString() == getString(R.string.teacher) ||
-                        binding.autoCompleteTextView.text.toString() == getString(R.string.student)
+                    userInfo[Constants.TOKEN] = token
+                    if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER ||
+                        binding.autoCompleteTextView.text.toString() == Constants.STUDENT
                     ) {
-                        if (binding.autoCompleteTextView.text.toString() == getString(R.string.teacher)) userInfo[getString(
-                            R.string.isTeacher
-                        )] =
-                            "1"
-                        if (binding.autoCompleteTextView.text.toString() == getString(R.string.student)) userInfo[getString(
-                            R.string.isTeacher
-                        )] =
-                            "0"
+                        if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER) userInfo[Constants.STATUS] =
+                            Constants.POSITIVE_STAT
+                        if (binding.autoCompleteTextView.text.toString() == Constants.STUDENT) userInfo[Constants.STATUS] =
+                            Constants.NEGATIVE_STAT
                     }
-                    viewModel.setUserInfo(userInfo, getString(R.string.collectionFirstPath))
+                    viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
                 }
             } else {
-                Toast.makeText(requireContext(), getString(R.string.signInFailed), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.signInFailed),
+                    Toast.LENGTH_SHORT
+                )
             }
         }
     }
@@ -125,7 +126,7 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
     override fun openNextFragment(path: String) {
         if (viewModel.checkState()) {
             val bundle = Bundle()
-            bundle.putString(getString(R.string.role), path)
+            bundle.putString(Constants.ROLE, path)
             findNavController().navigate(R.id.mainFragment, bundle)
         }
     }

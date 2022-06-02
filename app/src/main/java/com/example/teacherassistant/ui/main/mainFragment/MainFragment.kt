@@ -15,6 +15,7 @@ import androidx.lifecycle.whenStarted
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.OpenEmailWindowListener
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.EmailWindowBinding
@@ -45,24 +46,25 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val groupAdapter = arguments?.getString("Role")?.let { GroupAdapter(this, this, it) }
+        val groupAdapter =
+            arguments?.getString(Constants.ROLE)?.let { GroupAdapter(this, this, it) }
         FirebaseService.sharedPref =
             requireActivity().getSharedPreferences(
-                getString(R.string.sharedPref),
+                Constants.SHARED_PREF_NAME,
                 Context.MODE_PRIVATE
             )
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
             FirebaseService.token = it
             viewModel.setNewToken(
                 it,
-                getString(R.string.collectionFirstPath),
-                getString(R.string.collectionSecondPath),
-                getString(R.string.collectionThirdPathStudents)
+                Constants.COLLECTION_FIRST_PATH,
+                Constants.COLLECTION_SECOND_PATH,
+                Constants.COLLECTION_THIRD_PATH_STUDENTS
             )
         }
         viewModel.subscribeGroupListChanges(
-            getString(R.string.collectionFirstPath),
-            getString(R.string.collectionSecondPath)
+            Constants.COLLECTION_FIRST_PATH,
+            Constants.COLLECTION_SECOND_PATH
         )
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -75,7 +77,7 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
                 }
             }
         }
-        if (arguments?.getString(getString(R.string.role)) == getString(R.string.student)) {
+        if (arguments?.getString(Constants.ROLE) == Constants.STUDENT) {
             binding.addGroupButton.apply {
                 visibility = View.INVISIBLE
                 isClickable = false
@@ -98,7 +100,7 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
 
     private fun openGroupWindow() {
         val codeDialog = AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.collectionSecondPath))
+            .setTitle(getString(R.string.Group))
             .setMessage(getString(R.string.groupWindowMessage))
         groupBinding = GroupCreationWindowBinding.inflate(LayoutInflater.from(requireContext()))
         codeDialog.setView(groupBinding.root)
@@ -108,8 +110,8 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
                     .isNotBlank() && groupBinding.titleField.text.toString().isNotBlank()
             ) {
                 viewModel.createGroup(
-                    getString(R.string.collectionFirstPath),
-                    getString(R.string.collectionSecondPath),
+                    Constants.COLLECTION_FIRST_PATH,
+                    Constants.COLLECTION_SECOND_PATH,
                     groupBinding.nameField.text.toString(),
                     groupBinding.titleField.text.toString()
                 )
@@ -127,10 +129,10 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
     override fun openNextFragment(path: String) {
         if (viewModel.checkState()) {
             val bundle = Bundle()
-            bundle.putString(getString(R.string.GroupId), path)
+            bundle.putString(Constants.GROUP_ID, path)
             bundle.putString(
-                getString(R.string.role),
-                arguments?.getString(getString(R.string.role))
+                Constants.ROLE,
+                arguments?.getString(Constants.ROLE)
             )
             findNavController().navigate(R.id.notesFragment, bundle)
         }
@@ -146,10 +148,10 @@ class MainFragment : Fragment(), OpenNextFragmentListener, OpenEmailWindowListen
             if (emailBinding.emailField.text.toString().isNotBlank()) {
                 viewModel.addStudent(
                     emailBinding.emailField.text.toString(),
-                    getString(R.string.collectionFirstPath),
-                    getString(R.string.collectionSecondPath),
+                    Constants.COLLECTION_FIRST_PATH,
+                    Constants.COLLECTION_SECOND_PATH,
                     id,
-                    getString(R.string.collectionThirdPathStudents),
+                    Constants.COLLECTION_THIRD_PATH_STUDENTS,
                     title, name
                 )
             } else {

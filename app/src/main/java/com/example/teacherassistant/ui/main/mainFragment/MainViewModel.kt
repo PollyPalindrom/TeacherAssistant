@@ -2,6 +2,7 @@ package com.example.teacherassistant.ui.main.mainFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.Group
 import com.example.teacherassistant.common.GroupsState
 import com.example.teacherassistant.domain.use_cases.*
@@ -48,8 +49,8 @@ class MainViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val groupInfo: MutableMap<String, Any> = mutableMapOf()
-            groupInfo["Name"] = groupName
-            groupInfo["Title"] = title
+            groupInfo[Constants.NAME] = groupName
+            groupInfo[Constants.TITLE] = title
             getUserUid()?.let { it1 ->
                 getGroupInfoUseCase.getDocument(
                     collectionFirstPath,
@@ -77,8 +78,8 @@ class MainViewModel @Inject constructor(
                         for (group in value) {
                             groups.add(
                                 Group(
-                                    group.data["Name"].toString(),
-                                    group.data["Title"].toString(),
+                                    group.data[Constants.NAME].toString(),
+                                    group.data[Constants.TITLE].toString(),
                                     group.id
                                 )
                             )
@@ -105,10 +106,10 @@ class MainViewModel @Inject constructor(
             getCollectionReferenceForUserInfoUseCase.getCollectionReference(collectionFirstPath)
                 .get().addOnSuccessListener { documents ->
                     for (user in documents) {
-                        if (user.data["Email"].toString() == email) {
-                            val token = user.data["Token"].toString()
+                        if (user.data[Constants.EMAIL].toString() == email) {
+                            val token = user.data[Constants.TOKEN].toString()
                             val studentInfo: MutableMap<String, Any> = mutableMapOf()
-                            studentInfo["Token"] = token
+                            studentInfo[Constants.TOKEN] = token
                             getUserUid()?.let { it1 ->
                                 getNoteInfoUseCase.getDocumentReference(
                                     collectionFirstPath,
@@ -121,7 +122,7 @@ class MainViewModel @Inject constructor(
                                 setGroupsToStudents(
                                     collectionFirstPath,
                                     collectionSecondPath,
-                                    "Notes",
+                                    Constants.COLLECTION_THIRD_PATH,
                                     groupId,
                                     email,
                                     title,
@@ -149,15 +150,15 @@ class MainViewModel @Inject constructor(
                 .get()
                 .addOnSuccessListener { users ->
                     for (user in users) {
-                        if (user.data["Email"].toString() == email) {
+                        if (user.data[Constants.EMAIL].toString() == email) {
                             getGroupInfoUseCase.getCollection(
                                 collectionFirstPath,
                                 user.id,
                                 collectionSecondPath
                             ).get().addOnSuccessListener {
                                 val groupInfo: MutableMap<String, Any> = mutableMapOf()
-                                groupInfo["Name"] = name
-                                groupInfo["Title"] = title
+                                groupInfo[Constants.NAME] = name
+                                groupInfo[Constants.TITLE] = title
                                 getGroupInfoUseCase.getDocument(
                                     collectionFirstPath,
                                     user.id,
@@ -229,15 +230,15 @@ class MainViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             dr.get().addOnSuccessListener {
-                if (it.getString("Email") == getUserEmail()) {
+                if (it.getString(Constants.EMAIL) == getUserEmail()) {
                     val studentInfo: MutableMap<String, Any?> = mutableMapOf()
-                    studentInfo["Token"] = token
-                    studentInfo["Email"] = it.getString("Email")
-                    studentInfo["FullName"] = it.getString("FullName")
-                    studentInfo["isTeacher"] = it.getString("isTeacher")
+                    studentInfo[Constants.TOKEN] = token
+                    studentInfo[Constants.EMAIL] = it.getString(Constants.EMAIL)
+                    studentInfo[Constants.FULL_NAME] = it.getString(Constants.FULL_NAME)
+                    studentInfo[Constants.STATUS] = it.getString(Constants.STATUS)
                     dr.set(studentInfo)
                 }
-                if (it.getString("isTeacher") == "1") {
+                if (it.getString(Constants.STATUS) == Constants.POSITIVE_STAT) {
                     getGroupInfoUseCase.getCollection(
                         collectionFirstPath,
                         user.id,
@@ -281,7 +282,7 @@ class MainViewModel @Inject constructor(
                         if (getUserEmail() == student.id) {
                             val studentToken =
                                 mutableMapOf<String, Any>()
-                            studentToken["Token"] = token
+                            studentToken[Constants.TOKEN] = token
                             getNoteInfoUseCase.getDocumentReference(
                                 collectionFirstPath,
                                 user.id,

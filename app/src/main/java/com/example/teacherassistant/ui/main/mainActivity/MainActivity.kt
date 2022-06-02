@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.databinding.MainActivityBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity(), OpenNextFragmentListener {
 
         setContentView(binding.root)
         if (viewModel.getUserState()) {
-            viewModel.checkRole(this, getString(R.string.collectionFirstPath))
+            viewModel.checkRole(this, Constants.COLLECTION_FIRST_PATH)
         } else {
             findNavController(R.id.my_host_activity).navigate(R.id.signInFragment)
         }
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity(), OpenNextFragmentListener {
 
     override fun openNextFragment(path: String) {
         val bundle = Bundle()
-        bundle.putString(getString(R.string.role), path)
+        bundle.putString(Constants.ROLE, path)
         findNavController(R.id.my_host_activity).navigate(R.id.mainFragment, bundle)
     }
 }

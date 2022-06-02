@@ -1,27 +1,16 @@
 <resources>
     <string name="app_name">TeacherAssistant</string>
     <string name="sign_in">Sign In</string>
-    <string name="role">Role</string>
-    <string name="name">Name</string>
-    <string name="title">title</string>
-    <string name="teacher">Teacher</string>
-    <string name="student">Student</string>
-    <string name="collectionSecondPath">Group</string>
-    <string name="collectionFirstPath">User</string>
-    <string name="collectionThirdPath">Notes</string>
-    <string name="collectionThirdPathStudents">Students</string>
+
     <string name="groupWindowMessage">Enter name and tittle of group</string>
     <string name="noteWindowMessage">Enter title and text of note</string>
     <string name="emailWindowTitle">Students email</string>
-    <string name="sharedPref">sharedPref</string>
     <string name="positiveButton">OK</string>
     <string name="textErrorMessage">Wrong</string>
-    <string name="GroupId">GroupId</string>
     <string name="note">Note</string>
-    <string name="token">Token</string>
-    <string name="isTeacher">isTeacher</string>
     <string name="success">Success</string>
-    <string name="signInFailed">Sign In is failed</string>
+    <string name="signInFailed">Sign In is failed </string>
+    <string name="Group">Group</string>
     <string-array name="spinnerArray">
         <item>Teacher</item>
         <item>Student</item>
@@ -33,4 +22,8 @@
     <string name="add_new_note">Add new note</string>
     <string name="email">Email</string>
     <string name="add_new_student">Add new student</string>
+    <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="text">Text</string>
+    <string name="role">Role</string>
 </resources>

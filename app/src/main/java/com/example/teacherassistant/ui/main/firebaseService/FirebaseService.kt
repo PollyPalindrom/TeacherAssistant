@@ -13,22 +13,21 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.ui.main.mainActivity.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
-
-private const val CHANNEL_ID = "assistant_channel"
 
 class FirebaseService : FirebaseMessagingService() {
     companion object {
         var sharedPref: SharedPreferences? = null
         var token: String?
             get() {
-                return sharedPref?.getString("token", "")
+                return sharedPref?.getString(Constants.SHARED_PREF, "")
             }
             set(value) {
-                sharedPref?.edit()?.putString("token", value)?.apply()
+                sharedPref?.edit()?.putString(Constants.SHARED_PREF, value)?.apply()
             }
     }
 
@@ -50,8 +49,9 @@ class FirebaseService : FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, FLAG_ONE_SHOT)
         val notification =
-            NotificationCompat.Builder(this, CHANNEL_ID).setContentTitle(message.data["title"])
-                .setContentText(message.data["message"])
+            NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                .setContentTitle(message.data[Constants.MESSAGE_TITLE])
+                .setContentText(message.data[Constants.MESSAGE])
                 .setSmallIcon(R.drawable.ic_baseline_group_24)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
@@ -61,12 +61,13 @@ class FirebaseService : FirebaseMessagingService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
-        val channelName = "ChannelName"
-        val channel = NotificationChannel(CHANNEL_ID, channelName, IMPORTANCE_HIGH).apply {
-            description = "Channel for assistant"
-            enableLights(true)
-            lightColor = Color.GREEN
-        }
+        val channelName = Constants.CHANNEL_NAME
+        val channel =
+            NotificationChannel(Constants.CHANNEL_ID, channelName, IMPORTANCE_HIGH).apply {
+                description = Constants.DESCRIPTION
+                enableLights(true)
+                lightColor = Color.GREEN
+            }
         notificationManager.createNotificationChannel(channel)
     }
 }
