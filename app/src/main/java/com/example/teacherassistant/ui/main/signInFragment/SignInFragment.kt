@@ -10,13 +10,18 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.OpenNextFragmentListener
-import com.example.teacherassistant.databinding.SignInFragmentBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,17 +33,54 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignInFragment : Fragment(), OpenNextFragmentListener {
 
-    private lateinit var binding: SignInFragmentBinding
+    //    private lateinit var binding: SignInFragmentBinding
     private lateinit var launcher: ActivityResultLauncher<Intent>
-
+    private var status: String? = null
     private val viewModel by viewModels<SignInViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = SignInFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                SignIn()
+            }
+        }
+    }
+
+    @Composable
+    fun SignIn() {
+        ConstraintLayout {
+            val (teacherButton, text, studentButton) = createRefs()
+            Text("choose your role", modifier = Modifier.constrainAs(text) {
+                top.linkTo(parent.top)
+                bottom.linkTo(teacherButton.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            })
+            Button(
+                onClick = { status = "Teacher"; signIn() },
+                modifier = Modifier.constrainAs(teacherButton) {
+                    top.linkTo(text.bottom)
+                    bottom.linkTo(studentButton.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }) {
+                Text("Teacher")
+
+            }
+            Button(
+                onClick = { status = "Student"; signIn() },
+                modifier = Modifier.constrainAs(studentButton) {
+                    top.linkTo(teacherButton.bottom)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }) {
+                Text("Student")
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,24 +96,24 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
 
             }
         }
-        binding.SignInButton.setOnClickListener {
-            signIn()
-        }
+//        binding.SignInButton.setOnClickListener {
+//            signIn()
+//        }
 
         val spinnerAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             resources.getStringArray(R.array.spinnerArray)
         )
-        binding.autoCompleteTextView.apply {
-            setAdapter(spinnerAdapter)
-            threshold = 2
-            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    binding.autoCompleteTextView.showDropDown()
-                }
-            }
-        }
+//        binding.autoCompleteTextView.apply {
+//            setAdapter(spinnerAdapter)
+//            threshold = 2
+//            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+//                if (hasFocus) {
+//                    binding.autoCompleteTextView.showDropDown()
+//                }
+//            }
+//        }
         viewModel.checkRole(this, Constants.COLLECTION_FIRST_PATH)
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
             object : OnBackPressedCallback(true) {
@@ -103,14 +145,18 @@ class SignInFragment : Fragment(), OpenNextFragmentListener {
                 val userInfo = viewModel.getMapUserInfo()
                 FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
                     userInfo[Constants.TOKEN] = token
-                    if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER ||
-                        binding.autoCompleteTextView.text.toString() == Constants.STUDENT
-                    ) {
-                        if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER) userInfo[Constants.STATUS] =
-                            Constants.POSITIVE_STAT
-                        if (binding.autoCompleteTextView.text.toString() == Constants.STUDENT) userInfo[Constants.STATUS] =
-                            Constants.NEGATIVE_STAT
-                    }
+//                    if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER ||
+//                        binding.autoCompleteTextView.text.toString() == Constants.STUDENT
+//                    ) {
+//                        if (binding.autoCompleteTextView.text.toString() == Constants.TEACHER) userInfo[Constants.STATUS] =
+//                            Constants.POSITIVE_STAT
+//                        if (binding.autoCompleteTextView.text.toString() == Constants.STUDENT) userInfo[Constants.STATUS] =
+//                            Constants.NEGATIVE_STAT
+//                    }
+                    if (status == Constants.TEACHER) userInfo[Constants.STATUS] =
+                        Constants.POSITIVE_STAT
+                    if (status == Constants.STUDENT) userInfo[Constants.STATUS] =
+                        Constants.NEGATIVE_STAT
                     viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
                 }
             } else {

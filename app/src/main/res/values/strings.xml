@@ -26,4 +26,6 @@
     <string name="title">Title</string>
     <string name="text">Text</string>
     <string name="role">Role</string>
+    <string name="show_less">Show less</string>
+    <string name="show_more">Show more</string>
 </resources>

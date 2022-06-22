@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.teacherassistant.ui.main.mainFragment.MainFragment"
-        android:label="main_fragment"
-        tools:layout="@layout/main_fragment">
+        android:label="main_fragment">
         <argument
             android:name="Role"
             android:defaultValue="Student"
@@ -18,8 +17,7 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.teacherassistant.ui.main.signInFragment.SignInFragment"
-        android:label="sign_in_fragment"
-        tools:layout="@layout/sign_in_fragment">
+        android:label="sign_in_fragment">
         <action
             android:id="@+id/action_signInFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -41,7 +39,6 @@
     <fragment
         android:id="@+id/entryFragment"
         android:name="com.example.teacherassistant.ui.main.entryFragment.EntryFragment"
-        android:label="fragment_entry"
-        tools:layout="@layout/fragment_entry" />
+        android:label="fragment_entry"/>
 
 </navigation>

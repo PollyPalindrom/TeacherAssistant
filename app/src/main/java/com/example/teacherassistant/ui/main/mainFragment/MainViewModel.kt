@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.Group
 import com.example.teacherassistant.common.GroupsState
+import com.example.teacherassistant.common.StudentsParseManager
 import com.example.teacherassistant.domain.use_cases.*
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,7 @@ class MainViewModel @Inject constructor(
     ViewModel() {
     private val groupsList: MutableStateFlow<GroupsState?> = MutableStateFlow(null)
     val groupsListOpen: StateFlow<GroupsState?> = groupsList
+    private val parseManager = StudentsParseManager
 
     private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
@@ -51,6 +54,7 @@ class MainViewModel @Inject constructor(
             val groupInfo: MutableMap<String, Any> = mutableMapOf()
             groupInfo[Constants.NAME] = groupName
             groupInfo[Constants.TITLE] = title
+            groupInfo[Constants.TEACHER_ID] = getUserUid().toString()
             getUserUid()?.let { it1 ->
                 getGroupInfoUseCase.getDocument(
                     collectionFirstPath,
@@ -60,6 +64,24 @@ class MainViewModel @Inject constructor(
                 ).set(groupInfo)
             }
         }
+    }
+
+    private fun updateGroups(
+        value: QuerySnapshot
+    ) {
+        val groups = mutableListOf<Group>()
+        for (group in value) {
+            val students = mutableListOf<String>()
+            groups.add(
+                Group(
+                    group.data[Constants.NAME].toString(),
+                    group.data[Constants.TITLE].toString(),
+                    group.id,
+                    parseStudents(students)
+                )
+            )
+        }
+        groupsList.value = GroupsState(groups)
     }
 
     fun subscribeGroupListChanges(
@@ -74,17 +96,7 @@ class MainViewModel @Inject constructor(
                     collectionSecondPath
                 ).addSnapshotListener { value, error ->
                     if (value != null) {
-                        val groups = mutableListOf<Group>()
-                        for (group in value) {
-                            groups.add(
-                                Group(
-                                    group.data[Constants.NAME].toString(),
-                                    group.data[Constants.TITLE].toString(),
-                                    group.id
-                                )
-                            )
-                        }
-                        groupsList.value = GroupsState(groups)
+                        updateGroups(value)
                     }
                     if (error?.localizedMessage != null) groupsList.value =
                         GroupsState(error = error.localizedMessage)
@@ -143,7 +155,6 @@ class MainViewModel @Inject constructor(
         email: String,
         title: String,
         name: String
-
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             getCollectionReferenceForUserInfoUseCase.getCollectionReference(collectionFirstPath)
@@ -159,6 +170,7 @@ class MainViewModel @Inject constructor(
                                 val groupInfo: MutableMap<String, Any> = mutableMapOf()
                                 groupInfo[Constants.NAME] = name
                                 groupInfo[Constants.TITLE] = title
+                                groupInfo[Constants.TEACHER_ID] = getUserUid().toString()
                                 getGroupInfoUseCase.getDocument(
                                     collectionFirstPath,
                                     user.id,
@@ -295,6 +307,10 @@ class MainViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private fun parseStudents(students: List<String>): String {
+        return parseManager.parseStudents(students)
     }
 
 }

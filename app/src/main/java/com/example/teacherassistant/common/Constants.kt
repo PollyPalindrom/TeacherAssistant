@@ -31,5 +31,6 @@ class Constants {
         const val MESSAGE = "message"
         const val MESSAGE_TITLE = "title"
         const val GROUP_ID = "GroupId"
+        const val TEACHER_ID = "TeacherId"
     }
 }
