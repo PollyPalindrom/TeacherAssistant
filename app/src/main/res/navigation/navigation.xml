@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/entryFragment">
 
@@ -25,8 +24,7 @@
     <fragment
         android:id="@+id/notesFragment"
         android:name="com.example.teacherassistant.ui.main.notesFragment.NotesFragment"
-        android:label="group_fragment"
-        tools:layout="@layout/notes_fragment">
+        android:label="group_fragment">
         <argument
             android:name="GroupId"
             android:defaultValue="0"
@@ -39,6 +37,6 @@
     <fragment
         android:id="@+id/entryFragment"
         android:name="com.example.teacherassistant.ui.main.entryFragment.EntryFragment"
-        android:label="fragment_entry"/>
+        android:label="fragment_entry" />
 
 </navigation>
