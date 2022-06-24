@@ -1,5 +1,7 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.*
@@ -23,8 +25,8 @@ class NotesViewModel @Inject constructor(
     private val postNotificationUseCase: PostNotificationUseCase,
     private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase
 ) : ViewModel() {
-    private val noteList: MutableStateFlow<NotesState?> = MutableStateFlow(null)
-    val noteListOpen: StateFlow<NotesState?> = noteList
+    private val noteList = mutableStateOf(NotesState())
+    val noteListOpen: State<NotesState?> = noteList
 
     private val notificationState: MutableStateFlow<NotificationState?> = MutableStateFlow(null)
     val notificationStateOpen: StateFlow<NotificationState?> = notificationState

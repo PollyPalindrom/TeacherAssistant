@@ -26,6 +26,7 @@ class SignInViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase
 ) :
     ViewModel() {
+
     private val checkRoleManager = CheckRoleManager
 
     fun checkState(): Boolean {
@@ -61,9 +62,5 @@ class SignInViewModel @Inject constructor(
                 it
             )
         }
-    }
-
-    fun checkRole(listener: OpenNextFragmentListener, collectionFirstPath: String) {
-        checkRoleManager.checkRole(listener, getDocumentReferenceForUserInfo(collectionFirstPath))
     }
 }

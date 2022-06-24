@@ -1,5 +1,7 @@
 package com.example.teacherassistant.ui.main.mainFragment
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.Constants
@@ -27,8 +29,9 @@ class MainViewModel @Inject constructor(
     private val getDocumentReferenceForUserInfoUseCase: GetDocumentReferenceForUserInfoUseCase
 ) :
     ViewModel() {
-    private val groupsList: MutableStateFlow<GroupsState?> = MutableStateFlow(null)
-    val groupsListOpen: StateFlow<GroupsState?> = groupsList
+    private val groupsList = mutableStateOf(GroupsState())
+    val groupsListOpen: State<GroupsState> = groupsList
+
     private val parseManager = StudentsParseManager
 
     private fun getUserUid(): String? {

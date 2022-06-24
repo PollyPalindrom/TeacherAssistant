@@ -4,15 +4,15 @@ import com.google.firebase.firestore.DocumentReference
 
 object CheckRoleManager {
     fun checkRole(
-        listener: OpenNextFragmentListener,
+        openNextFragment: (role:String)->Unit,
         documentReference: DocumentReference?
     ) {
         documentReference?.get()?.addOnSuccessListener {
             if (it.getString("isTeacher") == "1") {
-                listener.openNextFragment("Teacher")
+                openNextFragment("Teacher")
             }
             if (it.getString("isTeacher") == "0") {
-                listener.openNextFragment("Student")
+                openNextFragment("Student")
             }
         }
     }
