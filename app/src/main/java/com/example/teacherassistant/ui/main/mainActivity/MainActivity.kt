@@ -23,6 +23,7 @@ import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.example.teacherassistant.ui.main.mainFragment.MainScreen
 import com.example.teacherassistant.ui.main.notesFragment.NotesScreen
 import com.example.teacherassistant.ui.main.signInFragment.SignInScreen
+import com.example.teacherassistant.ui.main.themes.AppTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -60,66 +61,68 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                 Context.MODE_PRIVATE
             )
         setContent {
-            Surface(color = MaterialTheme.colors.background) {
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.EntryScreen.route
-                ) {
-                    composable(
-                        route = Screen.EntryScreen.route
+            AppTheme {
+                Surface(color = MaterialTheme.colors.background) {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.EntryScreen.route
                     ) {
-                        EntryImage()
+                        composable(
+                            route = Screen.EntryScreen.route
+                        ) {
+                            EntryImage()
+                        }
+                        composable(route = Screen.SignInScreen.route) {
+                            SignInScreen(listener = getSignInListener())
+                        }
+                        composable(
+                            route = Screen.NotesScreen.route +
+                                    "?${Constants.ROLE}={${Constants.ROLE}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}",
+                            arguments = listOf(
+                                navArgument(Constants.ROLE) {
+                                    defaultValue = Constants.STUDENT
+                                    type = NavType.StringType
+                                },
+                                navArgument(Constants.GROUP_ID) {
+                                    defaultValue = Constants.GROUP_ID
+                                    type = NavType.StringType
+                                })
+                        ) {
+                            NotesScreen(
+                                listener = getPostListener(),
+                                role = it.arguments?.getString(Constants.ROLE),
+                                groupId = it.arguments?.getString(Constants.GROUP_ID)
+                            )
+                        }
+                        composable(
+                            route = Screen.GroupsScreen.route +
+                                    "?${Constants.ROLE}={${Constants.ROLE}}",
+                            arguments = listOf(
+                                navArgument(Constants.ROLE) {
+                                    defaultValue = Constants.STUDENT
+                                    type = NavType.StringType
+                                })
+                        ) {
+                            MainScreen(
+                                navController = navController,
+                                listener = getPostListener(),
+                                role = it.arguments?.getString(Constants.ROLE)
+                            )
+                        }
                     }
-                    composable(route = Screen.SignInScreen.route) {
-                        SignInScreen(listener = getSignInListener())
-                    }
-                    composable(
-                        route = Screen.NotesScreen.route +
-                                "?${Constants.ROLE}={${Constants.ROLE}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}",
-                        arguments = listOf(
-                            navArgument(Constants.ROLE) {
-                                defaultValue = Constants.STUDENT
-                                type = NavType.StringType
-                            },
-                            navArgument(Constants.GROUP_ID) {
-                                defaultValue = Constants.GROUP_ID
-                                type = NavType.StringType
-                            })
-                    ) {
-                        NotesScreen(
-                            listener = getPostListener(),
-                            role = it.arguments?.getString(Constants.ROLE),
-                            groupId = it.arguments?.getString(Constants.GROUP_ID)
+                    if (viewModel.getUserState()) {
+                        nextFragmentCallback =
+                            { role -> navController.navigate(Screen.GroupsScreen.route + "?Role=$role") }
+                        viewModel.checkRole(
+                            nextFragmentCallback,
+                            Constants.COLLECTION_FIRST_PATH
                         )
+                    } else {
+                        navController.navigate(Screen.SignInScreen.route)
                     }
-                    composable(
-                        route = Screen.GroupsScreen.route +
-                                "?${Constants.ROLE}={${Constants.ROLE}}",
-                        arguments = listOf(
-                            navArgument(Constants.ROLE) {
-                                defaultValue = Constants.STUDENT
-                                type = NavType.StringType
-                            })
-                    ) {
-                        MainScreen(
-                            navController = navController,
-                            listener = getPostListener(),
-                            role = it.arguments?.getString(Constants.ROLE)
-                        )
-                    }
-                }
-                if (viewModel.getUserState()) {
-                    nextFragmentCallback =
-                        { role -> navController.navigate(Screen.GroupsScreen.route + "?Role=$role") }
-                    viewModel.checkRole(
-                        nextFragmentCallback,
-                        Constants.COLLECTION_FIRST_PATH
-                    )
-                } else {
-                    navController.navigate(Screen.SignInScreen.route)
-                }
 
+                }
             }
         }
     }

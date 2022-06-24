@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
+import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -43,9 +45,12 @@ fun NotesScreen(
             Constants.COLLECTION_THIRD_PATH
         )
     }
-    Scaffold(floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar() },floatingActionButton = {
         if (role == Constants.TEACHER) {
-            FloatingActionButton(onClick = { noteDialog = !noteDialog }) {
+            FloatingActionButton(
+                onClick = { noteDialog = !noteDialog },
+                modifier = Modifier.background(MaterialTheme.colors.primary)
+            ) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_note))
             }
             if (noteDialog) {

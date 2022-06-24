@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
 import com.example.teacherassistant.common.Screen
+import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -63,7 +65,7 @@ fun MainScreen(
     var groupDialog by remember { mutableStateOf(false) }
 
     val onClick = { groupDialog = false }
-    Scaffold(floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar()}, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_group))
@@ -154,7 +156,10 @@ fun GroupItem(
                 }
             }
             if (role == Constants.TEACHER) {
-                IconButton(onClick = { emailDialog = !emailDialog }) {
+                IconButton(
+                    onClick = { emailDialog = !emailDialog },
+                    modifier = Modifier.background(MaterialTheme.colors.primary)
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_baseline_add_24),
                         contentDescription = ""
