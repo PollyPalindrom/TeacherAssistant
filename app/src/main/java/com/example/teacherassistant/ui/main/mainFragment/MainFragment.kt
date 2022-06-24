@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -65,7 +66,7 @@ fun MainScreen(
     Scaffold(floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
-                Icon(Icons.Filled.Add, "Add group")
+                Icon(Icons.Filled.Add, stringResource(R.string.add_new_group))
             }
             if (groupDialog) {
                 GroupDialog(onClick = onClick, openDialog = { name, title ->
@@ -105,7 +106,6 @@ fun MainScreen(
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GroupItem(
     name: String,
@@ -122,8 +122,7 @@ fun GroupItem(
 
     Surface(
         color = MaterialTheme.colors.primary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
-        onClick = { navController.navigate(Screen.NotesScreen.route + "?Role=$role&GroupId=$id") }
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -134,6 +133,12 @@ fun GroupItem(
                         stiffness = Spring.StiffnessLow
                     )
                 )
+                .clickable {
+                    navController.navigate(
+                        Screen.NotesScreen.route +
+                                "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=$id"
+                    )
+                }
         ) {
             Column(
                 modifier = Modifier
@@ -205,7 +210,7 @@ fun GroupDialog(onClick: () -> Unit, openDialog: (name: String, title: String) -
                     onValueChange = {
                         name = it
                     }, label = {
-                        Text(text = "Name")
+                        Text(text = stringResource(R.string.name))
                     }
                 )
                 TextField(
@@ -213,7 +218,7 @@ fun GroupDialog(onClick: () -> Unit, openDialog: (name: String, title: String) -
                     onValueChange = {
                         title = it
                     }, label = {
-                        Text(text = "Title")
+                        Text(text = stringResource(R.string.title))
                     }
                 )
             }

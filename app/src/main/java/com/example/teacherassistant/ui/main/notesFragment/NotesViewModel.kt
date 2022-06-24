@@ -164,11 +164,12 @@ class NotesViewModel @Inject constructor(
                     is Resource.Success -> {
                         notificationState.value = NotificationState(result.data)
                     }
-                    is Resource.Error -> {
+                    else -> {
                         notificationState.value = NotificationState(
                             error = result.message ?: Constants.UNEXPECTED_ERROR
                         )
                     }
+
                 }
             }.launchIn(viewModelScope)
         }

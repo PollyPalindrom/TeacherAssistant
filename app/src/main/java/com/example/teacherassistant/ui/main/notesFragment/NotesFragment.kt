@@ -1,7 +1,6 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
 import android.annotation.SuppressLint
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
@@ -27,7 +25,6 @@ import com.example.teacherassistant.common.PostToastListener
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun NotesScreen(
-    navController: NavController,
     viewModel: NotesViewModel = hiltViewModel(),
     listener: PostToastListener,
     role: String?,
@@ -49,7 +46,7 @@ fun NotesScreen(
     Scaffold(floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { noteDialog = !noteDialog }) {
-                Icon(Icons.Filled.Add, "Add note")
+                Icon(Icons.Filled.Add, stringResource(R.string.add_new_note))
             }
             if (noteDialog) {
                 NoteDialog(onClick = onClick, openDialog = { name, text ->
@@ -150,7 +147,7 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
                     onValueChange = {
                         name = it
                     }, label = {
-                        Text(text = "Title")
+                        Text(text = stringResource(R.string.title))
                     }
                 )
                 TextField(
@@ -158,7 +155,7 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
                     onValueChange = {
                         text = it
                     }, label = {
-                        Text(text = "Text")
+                        Text(text = stringResource(R.string.text))
                     }
                 )
             }

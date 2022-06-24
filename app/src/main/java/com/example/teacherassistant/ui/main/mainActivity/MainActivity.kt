@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     }
                     composable(
                         route = Screen.NotesScreen.route +
-                                "?Role={Role}&GroupId={GroupId}",
+                                "?${Constants.ROLE}={${Constants.ROLE}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}",
                         arguments = listOf(
                             navArgument(Constants.ROLE) {
                                 defaultValue = Constants.STUDENT
@@ -88,7 +88,6 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                             })
                     ) {
                         NotesScreen(
-                            navController = navController,
                             listener = getPostListener(),
                             role = it.arguments?.getString(Constants.ROLE),
                             groupId = it.arguments?.getString(Constants.GROUP_ID)
@@ -96,7 +95,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     }
                     composable(
                         route = Screen.GroupsScreen.route +
-                                "?Role={Role}",
+                                "?${Constants.ROLE}={${Constants.ROLE}}",
                         arguments = listOf(
                             navArgument(Constants.ROLE) {
                                 defaultValue = Constants.STUDENT
@@ -137,8 +136,8 @@ class MainActivity : AppCompatActivity(), PostToastListener,
         return GoogleSignIn.getClient(this, gso)
     }
 
-    override fun signIn(statusRole: String) {
-        status = statusRole
+    override fun signIn(status: String) {
+        this.status = status
         val signInClient = getClient()
         launcher.launch(signInClient.signInIntent)
     }

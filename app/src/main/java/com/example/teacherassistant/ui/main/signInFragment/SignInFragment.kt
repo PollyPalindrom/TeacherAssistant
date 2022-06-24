@@ -7,14 +7,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.SignInListener
 
 @Composable
 fun SignInScreen(
-    viewModel: SignInViewModel = hiltViewModel(),
     listener: SignInListener
 ) {
     val activity = LocalContext.current as? Activity
@@ -23,32 +23,32 @@ fun SignInScreen(
     }
     ConstraintLayout {
         val (teacherButton, text, studentButton) = createRefs()
-        Text("choose your role", modifier = Modifier.constrainAs(text) {
+        Text(stringResource(R.string.choose_role_message), modifier = Modifier.constrainAs(text) {
             top.linkTo(parent.top)
             bottom.linkTo(teacherButton.top)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         })
         Button(
-            onClick = { listener.signIn("Teacher") },
+            onClick = { listener.signIn(Constants.TEACHER) },
             modifier = Modifier.constrainAs(teacherButton) {
                 top.linkTo(text.bottom)
                 bottom.linkTo(studentButton.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }) {
-            Text("Teacher")
+            Text(stringResource(R.string.teacher))
 
         }
         Button(
-            onClick = { listener.signIn("Student") },
+            onClick = { listener.signIn(Constants.STUDENT) },
             modifier = Modifier.constrainAs(studentButton) {
                 top.linkTo(teacherButton.bottom)
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }) {
-            Text("Student")
+            Text(stringResource(R.string.student))
         }
     }
 }

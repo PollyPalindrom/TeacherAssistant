@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.CheckRoleManager
 import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
@@ -45,8 +44,11 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun checkRole(openNextFragment: (role:String)->Unit, collectionFirstPath: String) {
-        checkRoleManager.checkRole(openNextFragment, getDocumentReferenceForUserInfo(collectionFirstPath))
+    fun checkRole(openNextFragment: (role: String) -> Unit, collectionFirstPath: String) {
+        checkRoleManager.checkRole(
+            openNextFragment,
+            getDocumentReferenceForUserInfo(collectionFirstPath)
+        )
     }
 
     fun getMapUserInfo(): MutableMap<String, Any> {

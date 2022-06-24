@@ -14,8 +14,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,10 +35,6 @@ class MainViewModel @Inject constructor(
     private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
 
-    }
-
-    fun checkState(): Boolean {
-        return getUserInfoUseCase.getUserState()
     }
 
     private fun getUserEmail(): String? {

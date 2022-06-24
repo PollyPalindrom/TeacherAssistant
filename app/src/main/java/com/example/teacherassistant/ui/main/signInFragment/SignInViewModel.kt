@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.CheckRoleManager
 import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.common.OpenNextFragmentListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase

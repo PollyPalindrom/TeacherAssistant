@@ -28,4 +28,8 @@
     <string name="role">Role</string>
     <string name="show_less">Show less</string>
     <string name="show_more">Show more</string>
+    <string name="entryImageDescription">Entry Image</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="choose_role_message">Choose your role</string>
 </resources>
