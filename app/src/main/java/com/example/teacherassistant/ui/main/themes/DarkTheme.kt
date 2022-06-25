@@ -4,10 +4,10 @@ import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
 
 val DarkColors = darkColors(
-    primary = Red300,
-    primaryVariant = Red700,
+    primary = pink_500,
+    primaryVariant = pink_400,
     onPrimary = Color.Black,
-    secondary = Red300,
+    secondary = pink_500,
     onSecondary = Color.Black,
-    error = Red200,
+    error = Red800,
 )

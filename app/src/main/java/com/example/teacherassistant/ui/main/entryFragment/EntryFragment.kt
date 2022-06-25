@@ -2,12 +2,16 @@ package com.example.teacherassistant.ui.main.entryFragment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -18,7 +22,9 @@ fun EntryImage() {
     Scaffold(topBar = {
         CustomTopBar()
     }) {
-        ConstraintLayout {
+        ConstraintLayout(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()) {
             val image = createRef()
             Image(
                 painter = painterResource(R.drawable.ic_baseline_group_24),
@@ -30,7 +36,8 @@ fun EntryImage() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colors.background),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.primaryVariant)
             )
 
         }
@@ -39,7 +46,7 @@ fun EntryImage() {
 
 @Composable
 fun CustomTopBar() {
-    TopAppBar(backgroundColor = MaterialTheme.colors.primary) {
+    TopAppBar(backgroundColor = MaterialTheme.colors.primaryVariant) {
         Text(stringResource(R.string.app_name))
     }
 }
