@@ -32,4 +32,10 @@
     <string name="student">Student</string>
     <string name="teacher">Teacher</string>
     <string name="choose_role_message">Choose your role</string>
+    <string name="add_students_title"> Add students</string>
+    <string name="add_students_message">Add your students so they can receive notifications from you</string>
+    <string name="create_group_message">Create different groups with different participants</string>
+    <string name="create_group_title">Create groups</string>
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_message">Students in certain group will be notified if you create new note</string>
 </resources>

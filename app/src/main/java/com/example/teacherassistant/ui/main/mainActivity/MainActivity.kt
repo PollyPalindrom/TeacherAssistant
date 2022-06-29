@@ -22,8 +22,10 @@ import com.example.teacherassistant.ui.main.entryFragment.EntryImage
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.example.teacherassistant.ui.main.mainFragment.MainScreen
 import com.example.teacherassistant.ui.main.notesFragment.NotesScreen
+import com.example.teacherassistant.ui.main.onBoarding.WelcomeScreen
 import com.example.teacherassistant.ui.main.signInFragment.SignInScreen
 import com.example.teacherassistant.ui.main.themes.AppTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
     }
     private val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
 
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseService.sharedPref =
@@ -110,16 +113,19 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                                 role = it.arguments?.getString(Constants.ROLE)
                             )
                         }
+                        composable(route = Screen.WelcomeScreen.route) {
+                            WelcomeScreen(navController = navController)
+                        }
                     }
+                    nextFragmentCallback =
+                        { role -> navController.navigate(Screen.GroupsScreen.route + "?Role=$role") }
                     if (viewModel.getUserState()) {
-                        nextFragmentCallback =
-                            { role -> navController.navigate(Screen.GroupsScreen.route + "?Role=$role") }
                         viewModel.checkRole(
                             nextFragmentCallback,
                             Constants.COLLECTION_FIRST_PATH
                         )
                     } else {
-                        navController.navigate(Screen.SignInScreen.route)
+                        navController.navigate(Screen.WelcomeScreen.route)
                     }
 
                 }

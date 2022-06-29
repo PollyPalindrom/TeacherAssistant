@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.146" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.146" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable/ic_baseline_group_24.xml" value="0.146" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable/ic_baseline_group_add_24.xml" value="0.146" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable/ic_baseline_notifications_active_24.xml" value="0.146" />
+        <entry key="..\:/TeacherAssistant-master/app/src/main/res/drawable/ic_launcher_background.xml" value="0.146" />
         <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/email_window.xml" value="0.253125" />
         <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/fragment_entry.xml" value="0.22826086956521738" />
         <entry key="..\:/TeacherAssistant-master/app/src/main/res/layout/group_creation_window.xml" value="0.25416666666666665" />
