@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Screen
 import com.google.accompanist.pager.*
 
@@ -57,7 +58,7 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
     ) {
         Image(
             painter = painterResource(id = onBoardingPage.image),
-            contentDescription = "Pager Image",
+            contentDescription = stringResource(id = R.string.image_desc),
             modifier = Modifier
                 .fillMaxWidth(0.5f)
                 .fillMaxHeight(0.7f),
@@ -99,7 +100,7 @@ fun FinishButton(modifier: Modifier, pagerState: PagerState, onClick: () -> Unit
                 onClick = onClick,
                 colors = ButtonDefaults.buttonColors(contentColor = Color.White)
             ) {
-                Text(text = "Finish")
+                Text(text = stringResource(id = R.string.finish_button))
             }
         }
 

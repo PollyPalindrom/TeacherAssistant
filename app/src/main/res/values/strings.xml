@@ -38,4 +38,6 @@
     <string name="create_group_title">Create groups</string>
     <string name="notifications_title">Notifications</string>
     <string name="notifications_message">Students in certain group will be notified if you create new note</string>
+    <string name="finish_button">Finish</string>
+    <string name="image_desc">Pager Image</string>
 </resources>
