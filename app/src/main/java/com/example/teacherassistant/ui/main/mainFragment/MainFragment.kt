@@ -46,9 +46,6 @@ fun MainScreen(
     val state = viewModel.groupsListOpen.value
     val scaffoldState = rememberScaffoldState()
     val activity = LocalContext.current as? Activity
-    BackHandler {
-        activity?.finish()
-    }
     FirebaseMessaging.getInstance().token.addOnSuccessListener {
         FirebaseService.token = it
         viewModel.setNewToken(

@@ -118,13 +118,17 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                         }
                     }
                     nextFragmentCallback =
-                        { role -> navController.navigate(Screen.GroupsScreen.route + "?Role=$role") }
+                        { role ->
+                            navController.popBackStack()
+                            navController.navigate(Screen.GroupsScreen.route + "?Role=$role")
+                        }
                     if (viewModel.getUserState()) {
                         viewModel.checkRole(
                             nextFragmentCallback,
                             Constants.COLLECTION_FIRST_PATH
                         )
                     } else {
+                        navController.popBackStack()
                         navController.navigate(Screen.WelcomeScreen.route)
                     }
 

@@ -2,6 +2,8 @@ package com.example.teacherassistant.ui.main.signInFragment
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -20,10 +22,7 @@ fun SignInScreen(
     listener: SignInListener
 ) {
     val activity = LocalContext.current as? Activity
-    BackHandler {
-        activity?.finish()
-    }
-    Scaffold(topBar = { CustomTopBar() }) {
+    Scaffold(topBar = { CustomTopBar() }, modifier = Modifier.fillMaxSize()) {
         ConstraintLayout {
             val (teacherButton, text, studentButton) = createRefs()
             Text(
