@@ -85,13 +85,28 @@ fun MainScreen(
             items(state.groups) { group ->
                 if (role != null) {
                     GroupItem(
-                        name = group.name,
-                        title = group.title,
-                        id = group.id,
-                        viewModel,
-                        listener,
-                        role,
-                        navController
+                        group,
+                        deleteGroup = { groupToDelete ->
+                            viewModel.deleteGroup(
+                                Constants.COLLECTION_FIRST_PATH,
+                                Constants.COLLECTION_SECOND_PATH,
+                                groupToDelete
+                            )
+                        },
+                        addStudent = { text, studentGroup ->
+                            viewModel.addStudent(
+                                text,
+                                Constants.COLLECTION_FIRST_PATH,
+                                Constants.COLLECTION_SECOND_PATH,
+                                Constants.COLLECTION_THIRD_PATH_STUDENTS,
+                                studentGroup
+                            )
+                        },
+                        postToast = { id ->
+                            listener.postToast(id)
+                        },
+                        navController = navController,
+                        role = role
                     )
                 }
             }
@@ -102,11 +117,10 @@ fun MainScreen(
 
 @Composable
 fun GroupItem(
-    name: String,
-    title: String,
-    id: String,
-    viewModel: MainViewModel,
-    listener: PostToastListener,
+    group: Group,
+    addStudent: (text: String, group: Group) -> Unit,
+    deleteGroup: (group: Group) -> Unit,
+    postToast: (id: Int) -> Unit,
     role: String, navController: NavController
 ) {
 
@@ -129,7 +143,7 @@ fun GroupItem(
                 .clickable {
                     navController.navigate(
                         Screen.NotesScreen.route +
-                                "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=$id"
+                                "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
                     )
                 }
         ) {
@@ -138,10 +152,10 @@ fun GroupItem(
                     .weight(1f)
                     .padding(12.dp)
             ) {
-                Text(text = name)
+                Text(text = group.name)
                 if (expanded) {
                     Text(
-                        text = title
+                        text = group.title
                     )
 
                 }
@@ -156,6 +170,27 @@ fun GroupItem(
                         contentDescription = ""
                     )
                 }
+                IconButton(onClick = {
+                    deleteGroup(group)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                        contentDescription = "Open students list"
+
+                    )
+                }
+            }
+            IconButton(onClick = {
+                navController.navigate(
+                    Screen.StudentsListScreen.route +
+                            "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
+                )
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                    contentDescription = "Open students list"
+
+                )
             }
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
@@ -168,18 +203,6 @@ fun GroupItem(
 
                 )
             }
-            IconButton(onClick = {
-                navController.navigate(
-                    Screen.StudentsListScreen.route +
-                            "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=$id"
-                )
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_person_24),
-                    contentDescription = "Open students list"
-
-                )
-            }
         }
     }
     if (emailDialog) {
@@ -187,16 +210,9 @@ fun GroupItem(
             onClick = { emailDialog = false }, openDialog = { text: String ->
                 emailDialog = false
                 if (text.isNotBlank()) {
-                    viewModel.addStudent(
-                        text,
-                        Constants.COLLECTION_FIRST_PATH,
-                        Constants.COLLECTION_SECOND_PATH,
-                        id,
-                        Constants.COLLECTION_THIRD_PATH_STUDENTS,
-                        title, name
-                    )
+                    addStudent(text, group)
                 } else {
-                    listener.postToast(R.string.textErrorMessage)
+                    postToast(R.string.textErrorMessage)
                 }
             })
     }

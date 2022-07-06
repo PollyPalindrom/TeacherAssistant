@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +15,7 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,8 +48,7 @@ fun NotesScreen(
     Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(
-                onClick = { noteDialog = !noteDialog },
-                modifier = Modifier.background(MaterialTheme.colors.primary)
+                onClick = { noteDialog = !noteDialog }
             ) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_note))
             }
@@ -79,10 +78,17 @@ fun NotesScreen(
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
             if (state != null) {
                 items(state.notes) { note ->
-                    NoteItem(
-                        name = note.title,
-                        text = note.message
-                    )
+                    if (role != null && groupId != null) {
+                        NoteItem(note, role, deleteNote = {
+                            viewModel.deleteNote(
+                                Constants.COLLECTION_FIRST_PATH,
+                                Constants.COLLECTION_SECOND_PATH,
+                                Constants.COLLECTION_THIRD_PATH,
+                                note,
+                                groupId
+                            )
+                        })
+                    }
                 }
             }
         }
@@ -90,7 +96,7 @@ fun NotesScreen(
 }
 
 @Composable
-fun NoteItem(name: String, text: String) {
+fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Surface(
@@ -115,10 +121,21 @@ fun NoteItem(name: String, text: String) {
                     .weight(1f)
                     .padding(12.dp)
             ) {
-                Text(text = name)
+                Text(text = note.title)
                 if (expanded) {
                     Text(
-                        text = text
+                        text = note.message
+                    )
+                }
+            }
+            if (role == Constants.TEACHER) {
+                IconButton(onClick = {
+                    deleteNote(note)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                        contentDescription = "Open students list"
+
                     )
                 }
             }

@@ -100,10 +100,8 @@ class MainViewModel @Inject constructor(
         email: String,
         collectionFirstPath: String,
         collectionSecondPath: String,
-        groupId: String,
         collectionThirdPath: String,
-        title: String,
-        name: String
+        group: Group
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             getCollectionReferenceForUserInfoUseCase.getCollectionReference(collectionFirstPath)
@@ -118,7 +116,7 @@ class MainViewModel @Inject constructor(
                                     collectionFirstPath,
                                     it1,
                                     collectionSecondPath,
-                                    groupId,
+                                    group.id,
                                     collectionThirdPath,
                                     email
                                 ).set(studentInfo)
@@ -126,10 +124,10 @@ class MainViewModel @Inject constructor(
                                     collectionFirstPath,
                                     collectionSecondPath,
                                     Constants.COLLECTION_THIRD_PATH,
-                                    groupId,
+                                    group.id,
                                     email,
-                                    title,
-                                    name
+                                    group.title,
+                                    group.name
                                 )
                             }
                         }
