@@ -1,8 +1,6 @@
 package com.example.teacherassistant.ui.main.mainFragment
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -21,7 +19,6 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,7 +42,6 @@ fun MainScreen(
 ) {
     val state = viewModel.groupsListOpen.value
     val scaffoldState = rememberScaffoldState()
-    val activity = LocalContext.current as? Activity
     FirebaseMessaging.getInstance().token.addOnSuccessListener {
         FirebaseService.token = it
         viewModel.setNewToken(
@@ -62,7 +58,7 @@ fun MainScreen(
     var groupDialog by remember { mutableStateOf(false) }
 
     val onClick = { groupDialog = false }
-    Scaffold(topBar = { CustomTopBar()}, floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_group))
@@ -92,7 +88,6 @@ fun MainScreen(
                         name = group.name,
                         title = group.title,
                         id = group.id,
-                        group.students,
                         viewModel,
                         listener,
                         role,
@@ -110,7 +105,6 @@ fun GroupItem(
     name: String,
     title: String,
     id: String,
-    students: String,
     viewModel: MainViewModel,
     listener: PostToastListener,
     role: String, navController: NavController
@@ -149,7 +143,7 @@ fun GroupItem(
                     Text(
                         text = title
                     )
-                    Text(text = students)
+
                 }
             }
             if (role == Constants.TEACHER) {
@@ -171,6 +165,18 @@ fun GroupItem(
                     } else {
                         stringResource(R.string.show_more)
                     }
+
+                )
+            }
+            IconButton(onClick = {
+                navController.navigate(
+                    Screen.StudentsListScreen.route +
+                            "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=$id"
+                )
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                    contentDescription = "Open students list"
 
                 )
             }

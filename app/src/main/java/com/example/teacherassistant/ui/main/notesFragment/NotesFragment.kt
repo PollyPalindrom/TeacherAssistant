@@ -45,7 +45,7 @@ fun NotesScreen(
             Constants.COLLECTION_THIRD_PATH
         )
     }
-    Scaffold(topBar = { CustomTopBar() },floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(
                 onClick = { noteDialog = !noteDialog },

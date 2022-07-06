@@ -11,21 +11,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.*
-import com.example.teacherassistant.ui.main.entryFragment.EntryImage
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
-import com.example.teacherassistant.ui.main.mainFragment.MainScreen
-import com.example.teacherassistant.ui.main.notesFragment.NotesScreen
-import com.example.teacherassistant.ui.main.onBoarding.WelcomeScreen
-import com.example.teacherassistant.ui.main.signInFragment.SignInScreen
+import com.example.teacherassistant.ui.main.navigation.NavGraph
 import com.example.teacherassistant.ui.main.themes.AppTheme
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -55,7 +46,6 @@ class MainActivity : AppCompatActivity(), PostToastListener,
     }
     private val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
 
-    @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseService.sharedPref =
@@ -67,56 +57,11 @@ class MainActivity : AppCompatActivity(), PostToastListener,
             AppTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
-                    NavHost(
+                    NavGraph(
                         navController = navController,
-                        startDestination = Screen.EntryScreen.route
-                    ) {
-                        composable(
-                            route = Screen.EntryScreen.route
-                        ) {
-                            EntryImage()
-                        }
-                        composable(route = Screen.SignInScreen.route) {
-                            SignInScreen(listener = getSignInListener())
-                        }
-                        composable(
-                            route = Screen.NotesScreen.route +
-                                    "?${Constants.ROLE}={${Constants.ROLE}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}",
-                            arguments = listOf(
-                                navArgument(Constants.ROLE) {
-                                    defaultValue = Constants.STUDENT
-                                    type = NavType.StringType
-                                },
-                                navArgument(Constants.GROUP_ID) {
-                                    defaultValue = Constants.GROUP_ID
-                                    type = NavType.StringType
-                                })
-                        ) {
-                            NotesScreen(
-                                listener = getPostListener(),
-                                role = it.arguments?.getString(Constants.ROLE),
-                                groupId = it.arguments?.getString(Constants.GROUP_ID)
-                            )
-                        }
-                        composable(
-                            route = Screen.GroupsScreen.route +
-                                    "?${Constants.ROLE}={${Constants.ROLE}}",
-                            arguments = listOf(
-                                navArgument(Constants.ROLE) {
-                                    defaultValue = Constants.STUDENT
-                                    type = NavType.StringType
-                                })
-                        ) {
-                            MainScreen(
-                                navController = navController,
-                                listener = getPostListener(),
-                                role = it.arguments?.getString(Constants.ROLE)
-                            )
-                        }
-                        composable(route = Screen.WelcomeScreen.route) {
-                            WelcomeScreen(navController = navController)
-                        }
-                    }
+                        postToastListener = this,
+                        signInListener = this
+                    )
                     nextFragmentCallback =
                         { role ->
                             navController.popBackStack()
@@ -136,9 +81,6 @@ class MainActivity : AppCompatActivity(), PostToastListener,
             }
         }
     }
-
-    private fun getPostListener(): PostToastListener = this
-    private fun getSignInListener(): SignInListener = this
 
     private fun getClient(): GoogleSignInClient {
         val gso =

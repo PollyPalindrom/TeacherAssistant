@@ -5,9 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.common.Group
-import com.example.teacherassistant.common.GroupsState
-import com.example.teacherassistant.common.StudentsParseManager
 import com.example.teacherassistant.domain.use_cases.*
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -29,8 +26,6 @@ class MainViewModel @Inject constructor(
     ViewModel() {
     private val groupsList = mutableStateOf(GroupsState())
     val groupsListOpen: State<GroupsState> = groupsList
-
-    private val parseManager = StudentsParseManager
 
     private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
@@ -63,18 +58,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
+
     private fun updateGroups(
         value: QuerySnapshot
     ) {
         val groups = mutableListOf<Group>()
         for (group in value) {
-            val students = mutableListOf<String>()
             groups.add(
                 Group(
                     group.data[Constants.NAME].toString(),
                     group.data[Constants.TITLE].toString(),
-                    group.id,
-                    parseStudents(students)
+                    group.id
                 )
             )
         }
@@ -304,10 +298,6 @@ class MainViewModel @Inject constructor(
                     }
                 }
         }
-    }
-
-    private fun parseStudents(students: List<String>): String {
-        return parseManager.parseStudents(students)
     }
 
 }

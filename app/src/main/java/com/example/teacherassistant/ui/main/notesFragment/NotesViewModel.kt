@@ -126,7 +126,7 @@ class NotesViewModel @Inject constructor(
         collectionFirstPath: String,
         collectionSecondPath: String,
         groupId: String,
-        collectionThirdPath: String,
+        collectionThirdPath: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             getUserUid()?.let { uid ->
