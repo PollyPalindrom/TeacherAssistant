@@ -1,11 +1,16 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -133,7 +138,7 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
                     deleteNote(note)
                 }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                        painter = painterResource(id = R.drawable.ic_baseline_delete_24),
                         contentDescription = "Open students list"
 
                     )
@@ -153,10 +158,22 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
     }
 }
 
+@SuppressLint("MutableCollectionMutableState", "UnrememberedMutableState")
 @Composable
 fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> Unit) {
     var name by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
+    var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract =
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            pictures += uri
+        }
+    }
+
     AlertDialog(
         onDismissRequest = onClick,
         title = {
@@ -180,6 +197,25 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
                         Text(text = stringResource(R.string.text))
                     }
                 )
+
+                LazyRow(modifier = Modifier.padding(vertical = 4.dp)) {
+                    items(pictures) { picture ->
+                        PictureItem(uri = picture)
+                    }
+                }
+
+                IconButton(onClick = {
+                    launcher.launch("image/*")
+                    println(pictures.size)
+                }) {
+                    Row {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                            contentDescription = "Add picture",
+                        )
+                        Text(text = "Add picture")
+                    }
+                }
             }
         },
         confirmButton = {
@@ -190,4 +226,20 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
             }
         }
     )
+}
+
+@Composable
+fun PictureItem(uri: Uri) {
+    Surface(
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier
+            .padding(vertical = 1.dp, horizontal = 1.dp)
+            .size(50.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_baseline_person_24),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }

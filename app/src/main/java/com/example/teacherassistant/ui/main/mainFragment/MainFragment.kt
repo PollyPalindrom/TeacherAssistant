@@ -174,7 +174,7 @@ fun GroupItem(
                     deleteGroup(group)
                 }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_person_24),
+                        painter = painterResource(id = R.drawable.ic_baseline_delete_24),
                         contentDescription = "Open students list"
 
                     )

@@ -194,6 +194,51 @@ class NotesViewModel @Inject constructor(
                 val newList = noteList.value.notes as MutableList<Note>
                 newList.remove(note)
                 noteList.value = NotesState(newList)
+                deleteNoteFromStudents(
+                    collectionFirstPath,
+                    collectionSecondPath,
+                    collectionThirdPath,
+                    note,
+                    groupId
+                )
+            }
+        }
+    }
+
+    private fun deleteNoteFromStudents(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        collectionThirdPath: String,
+        note: Note,
+        groupId: String
+    ) {
+        getUserUid()?.let {
+            getNoteInfoUseCase.getCollectionReference(
+                collectionFirstPath,
+                it,
+                collectionSecondPath,
+                groupId,
+                Constants.COLLECTION_THIRD_PATH_STUDENTS
+            ).get().addOnSuccessListener { students ->
+                for (student in students) {
+                    getCollectionReferenceForUserInfoUseCase.getCollectionReference(
+                        collectionFirstPath
+                    ).get().addOnSuccessListener { users ->
+                        for (user in users) {
+                            if (user.data[Constants.EMAIL] == student.id) {
+                                getNoteInfoUseCase.getDocumentReference(
+                                    collectionFirstPath,
+                                    user.id,
+                                    collectionSecondPath,
+                                    groupId,
+                                    collectionThirdPath,
+                                    groupId + note.title
+                                ).delete()
+                            }
+                        }
+
+                    }
+                }
             }
         }
     }

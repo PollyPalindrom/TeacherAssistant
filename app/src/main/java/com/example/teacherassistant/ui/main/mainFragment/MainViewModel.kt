@@ -311,6 +311,40 @@ class MainViewModel @Inject constructor(
                 val newList = groupsList.value.groups as MutableList<Group>
                 newList.remove(group)
                 groupsList.value = GroupsState(newList)
+                deleteGroupFromStudents(collectionFirstPath, collectionSecondPath, group)
+            }
+        }
+    }
+
+    private fun deleteGroupFromStudents(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        group: Group
+    ) {
+        getUserUid()?.let {
+            getNoteInfoUseCase.getCollectionReference(
+                collectionFirstPath,
+                it,
+                collectionSecondPath,
+                group.id,
+                Constants.COLLECTION_THIRD_PATH_STUDENTS
+            ).get().addOnSuccessListener { students ->
+                for (student in students) {
+                    getCollectionReferenceForUserInfoUseCase.getCollectionReference(
+                        collectionFirstPath
+                    ).get().addOnSuccessListener { users ->
+                        for (user in users) {
+                            if (user.data[Constants.EMAIL] == student.id) {
+                                getGroupInfoUseCase.getDocument(
+                                    collectionFirstPath,
+                                    user.id,
+                                    collectionSecondPath,
+                                    group.id
+                                ).delete()
+                            }
+                        }
+                    }
+                }
             }
         }
     }
