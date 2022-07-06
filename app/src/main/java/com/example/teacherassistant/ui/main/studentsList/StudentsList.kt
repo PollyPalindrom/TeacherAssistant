@@ -46,7 +46,7 @@ fun StudentsList(
                             student,
                             Constants.COLLECTION_FIRST_PATH,
                             Constants.COLLECTION_SECOND_PATH,
-                            Constants.COLLECTION_THIRD_PATH,
+                            Constants.COLLECTION_THIRD_PATH_STUDENTS,
                             groupId
                         )
                     }

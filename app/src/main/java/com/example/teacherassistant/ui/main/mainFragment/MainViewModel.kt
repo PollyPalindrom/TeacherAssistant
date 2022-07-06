@@ -300,4 +300,20 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun deleteGroup(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        group: Group
+    ) {
+        getUserUid()?.let {
+            getGroupInfoUseCase.getDocument(
+                collectionFirstPath,
+                it, collectionSecondPath, group.id
+            ).delete().addOnSuccessListener {
+                val newList = groupsList.value.groups as MutableList<Group>
+                newList.remove(group)
+                groupsList.value = GroupsState(newList)
+            }
+        }
+    }
 }

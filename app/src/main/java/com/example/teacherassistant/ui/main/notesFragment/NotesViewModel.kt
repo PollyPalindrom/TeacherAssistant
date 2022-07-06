@@ -174,4 +174,27 @@ class NotesViewModel @Inject constructor(
             }.launchIn(viewModelScope)
         }
     }
+
+    fun deleteNote(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        collectionThirdPath: String,
+        note: Note,
+        groupId: String
+    ) {
+        getUserUid()?.let {
+            getNoteInfoUseCase.getDocumentReference(
+                collectionFirstPath,
+                it,
+                collectionSecondPath,
+                groupId,
+                collectionThirdPath,
+                note.id
+            ).delete().addOnSuccessListener {
+                val newList = noteList.value.notes as MutableList<Note>
+                newList.remove(note)
+                noteList.value = NotesState(newList)
+            }
+        }
+    }
 }
