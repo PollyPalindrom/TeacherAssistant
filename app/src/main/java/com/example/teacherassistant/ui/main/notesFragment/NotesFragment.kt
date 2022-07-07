@@ -8,6 +8,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,11 +20,13 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
@@ -140,7 +143,6 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_delete_24),
                         contentDescription = "Open students list"
-
                     )
                 }
             }
@@ -200,13 +202,12 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
 
                 LazyRow(modifier = Modifier.padding(vertical = 4.dp)) {
                     items(pictures) { picture ->
-                        PictureItem(uri = picture)
+                        PictureItem(uri = picture, delete = { uri -> pictures -= uri })
                     }
                 }
 
                 IconButton(onClick = {
                     launcher.launch("image/*")
-                    println(pictures.size)
                 }) {
                     Row {
                         Icon(
@@ -229,17 +230,27 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
 }
 
 @Composable
-fun PictureItem(uri: Uri) {
+fun PictureItem(uri: Uri, delete: (uri: Uri) -> Unit) {
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier
             .padding(vertical = 1.dp, horizontal = 1.dp)
-            .size(50.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_baseline_person_24),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
-        )
+        Column {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_delete_24),
+                contentDescription = "Delete picture",
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .clickable { delete(uri) }
+                    .align(Alignment.End)
+            )
+
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp),
+            )
+        }
     }
 }
