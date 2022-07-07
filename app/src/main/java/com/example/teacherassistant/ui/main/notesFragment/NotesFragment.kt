@@ -42,8 +42,7 @@ fun NotesScreen(
 ) {
     val state = viewModel.noteListOpen.value
     val scaffoldState = rememberScaffoldState()
-    var noteDialog by remember { mutableStateOf(false) }
-
+    var noteDialog by rememberSaveable { mutableStateOf(false) }
     val onClick = { noteDialog = false }
     if (groupId != null) {
         viewModel.subscribeNoteListChanges(
@@ -59,27 +58,6 @@ fun NotesScreen(
                 onClick = { noteDialog = !noteDialog }
             ) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_note))
-            }
-            if (noteDialog) {
-                NoteDialog(onClick = onClick, openDialog = { name, text ->
-                    noteDialog = false
-                    if (name.isNotBlank() && text.isNotBlank()
-                    ) {
-                        if (groupId != null) {
-                            viewModel.createNote(
-                                Constants.COLLECTION_FIRST_PATH,
-                                Constants.COLLECTION_SECOND_PATH,
-                                Constants.COLLECTION_THIRD_PATH,
-                                groupId,
-                                name,
-                                text
-                            )
-                        }
-
-                    } else {
-                        listener.postToast(R.string.textErrorMessage)
-                    }
-                })
             }
         }
     }, scaffoldState = scaffoldState) {
@@ -99,6 +77,28 @@ fun NotesScreen(
                     }
                 }
             }
+        }
+        if (noteDialog) {
+            NoteDialog(onClick = onClick, createNote = { name, text, uris ->
+                noteDialog = false
+                if (name.isNotBlank() && text.isNotBlank()
+                ) {
+                    if (groupId != null) {
+                        viewModel.createNote(
+                            Constants.COLLECTION_FIRST_PATH,
+                            Constants.COLLECTION_SECOND_PATH,
+                            Constants.COLLECTION_THIRD_PATH,
+                            groupId,
+                            name,
+                            text,
+                            uris
+                        )
+                    }
+
+                } else {
+                    listener.postToast(R.string.textErrorMessage)
+                }
+            })
         }
     }
 }
@@ -162,7 +162,10 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
 
 @SuppressLint("MutableCollectionMutableState", "UnrememberedMutableState")
 @Composable
-fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> Unit) {
+fun NoteDialog(
+    onClick: () -> Unit,
+    createNote: (name: String, text: String, uris: List<Uri>) -> Unit
+) {
     var name by rememberSaveable { mutableStateOf("") }
     var text by rememberSaveable { mutableStateOf("") }
     var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
@@ -221,7 +224,7 @@ fun NoteDialog(onClick: () -> Unit, openDialog: (name: String, text: String) -> 
         },
         confirmButton = {
             Button(
-                onClick = { openDialog(name, text) }
+                onClick = { createNote(name, text, pictures) }
             ) {
                 Text(stringResource(R.string.positiveButton))
             }

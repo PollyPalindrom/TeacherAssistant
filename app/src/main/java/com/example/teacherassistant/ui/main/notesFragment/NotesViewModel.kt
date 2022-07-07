@@ -1,5 +1,6 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -42,7 +43,8 @@ class NotesViewModel @Inject constructor(
         collectionThirdPath: String,
         groupId: String,
         title: String,
-        text: String
+        text: String,
+        uris:List<Uri>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteInfo: MutableMap<String, Any> = mutableMapOf()
@@ -57,6 +59,7 @@ class NotesViewModel @Inject constructor(
                     collectionThirdPath,
                     groupId + title
                 ).set(noteInfo)
+                // необходимо создать юзкейс, чтобы создать у заметки коллекцию, в которой будут документы с url пикч
             }
             updateStudentNotes(
                 collectionFirstPath,
@@ -79,6 +82,10 @@ class NotesViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun uploadPictures(uris: List<Uri>){
+
     }
 
 

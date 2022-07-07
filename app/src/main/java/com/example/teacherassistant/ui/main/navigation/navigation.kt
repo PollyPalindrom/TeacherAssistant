@@ -32,7 +32,7 @@ fun NavGraph(
         composable(
             route = Screen.EntryScreen.route
         ) {
-            EntryImage()
+            EntryImage(navController = navController)
         }
         composable(route = Screen.SignInScreen.route) {
             SignInScreen(listener = signInListener)

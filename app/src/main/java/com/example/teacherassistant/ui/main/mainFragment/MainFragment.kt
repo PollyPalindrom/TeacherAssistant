@@ -1,6 +1,7 @@
 package com.example.teacherassistant.ui.main.mainFragment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -51,33 +52,19 @@ fun MainScreen(
             Constants.COLLECTION_THIRD_PATH_STUDENTS
         )
     }
-    viewModel.subscribeGroupListChanges(
-        Constants.COLLECTION_FIRST_PATH,
-        Constants.COLLECTION_SECOND_PATH
-    )
-    var groupDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = true) {
+        viewModel.subscribeGroupListChanges(
+            Constants.COLLECTION_FIRST_PATH,
+            Constants.COLLECTION_SECOND_PATH
+        )
+    }
+    var groupDialog by rememberSaveable { mutableStateOf(false) }
 
     val onClick = { groupDialog = false }
     Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
                 Icon(Icons.Filled.Add, stringResource(R.string.add_new_group))
-            }
-            if (groupDialog) {
-                GroupDialog(onClick = onClick, openDialog = { name, title ->
-                    groupDialog = false
-                    if (name.isNotBlank() && title.isNotBlank()
-                    ) {
-                        viewModel.createGroup(
-                            Constants.COLLECTION_FIRST_PATH,
-                            Constants.COLLECTION_SECOND_PATH,
-                            name,
-                            title
-                        )
-                    } else {
-                        listener.postToast(R.string.textErrorMessage)
-                    }
-                })
             }
         }
     }, scaffoldState = scaffoldState) {
@@ -105,11 +92,38 @@ fun MainScreen(
                         postToast = { id ->
                             listener.postToast(id)
                         },
-                        navController = navController,
+                        navigateToNotes = {
+                            navController.navigate(
+                                Screen.NotesScreen.route +
+                                        "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
+                            )
+                        },
+                        navigateToStudentsList = {
+                            navController.navigate(
+                                Screen.StudentsListScreen.route +
+                                        "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
+                            )
+                        },
                         role = role
                     )
                 }
             }
+        }
+        if (groupDialog) {
+            GroupDialog(onClick = onClick, openDialog = { name, title ->
+                groupDialog = false
+                if (name.isNotBlank() && title.isNotBlank()
+                ) {
+                    viewModel.createGroup(
+                        Constants.COLLECTION_FIRST_PATH,
+                        Constants.COLLECTION_SECOND_PATH,
+                        name,
+                        title
+                    )
+                } else {
+                    listener.postToast(R.string.textErrorMessage)
+                }
+            })
         }
     }
 
@@ -121,11 +135,13 @@ fun GroupItem(
     addStudent: (text: String, group: Group) -> Unit,
     deleteGroup: (group: Group) -> Unit,
     postToast: (id: Int) -> Unit,
-    role: String, navController: NavController
+    role: String,
+    navigateToNotes: () -> Unit,
+    navigateToStudentsList: () -> Unit
 ) {
 
-    var expanded by remember { mutableStateOf(false) }
-    var emailDialog by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var emailDialog by rememberSaveable { mutableStateOf(false) }
 
     Surface(
         color = MaterialTheme.colors.primary,
@@ -141,10 +157,7 @@ fun GroupItem(
                     )
                 )
                 .clickable {
-                    navController.navigate(
-                        Screen.NotesScreen.route +
-                                "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
-                    )
+                    navigateToNotes()
                 }
         ) {
             Column(
@@ -181,10 +194,7 @@ fun GroupItem(
                 }
             }
             IconButton(onClick = {
-                navController.navigate(
-                    Screen.StudentsListScreen.route +
-                            "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
-                )
+                navigateToStudentsList()
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_person_24),

@@ -3,6 +3,7 @@ package com.example.teacherassistant.ui.main.mainActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -13,7 +14,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
 import com.example.teacherassistant.R
-import com.example.teacherassistant.common.*
+import com.example.teacherassistant.common.Constants
+import com.example.teacherassistant.common.PostToastListener
+import com.example.teacherassistant.common.Screen
+import com.example.teacherassistant.common.SignInListener
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.example.teacherassistant.ui.main.navigation.NavGraph
 import com.example.teacherassistant.ui.main.themes.AppTheme
@@ -67,16 +71,6 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                             navController.popBackStack()
                             navController.navigate(Screen.GroupsScreen.route + "?Role=$role")
                         }
-                    if (viewModel.getUserState()) {
-                        viewModel.checkRole(
-                            nextFragmentCallback,
-                            Constants.COLLECTION_FIRST_PATH
-                        )
-                    } else {
-                        navController.popBackStack()
-                        navController.navigate(Screen.WelcomeScreen.route)
-                    }
-
                 }
             }
         }

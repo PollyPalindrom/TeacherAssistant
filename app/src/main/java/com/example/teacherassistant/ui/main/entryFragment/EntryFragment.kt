@@ -1,5 +1,6 @@
 package com.example.teacherassistant.ui.main.entryFragment
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,22 +10,49 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.teacherassistant.R
+import com.example.teacherassistant.common.Constants
+import com.example.teacherassistant.common.Screen
 
 @Composable
-fun EntryImage() {
+fun EntryImage(
+    viewModel: EntryFragmentViewModel = hiltViewModel(),
+    navController: NavHostController
+) {
+
+    val nextFragmentCallback =
+        { role: String ->
+            navController.popBackStack()
+            navController.navigate(Screen.GroupsScreen.route + "?Role=$role")
+        }
+    LaunchedEffect(key1 = true){
+        if (viewModel.getUserState()) {
+            viewModel.checkRole(
+                nextFragmentCallback,
+                Constants.COLLECTION_FIRST_PATH
+            )
+        } else {
+            navController.popBackStack()
+            navController.navigate(Screen.WelcomeScreen.route)
+        }
+    }
+
     Scaffold(topBar = {
         CustomTopBar()
     }) {
-        ConstraintLayout(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()) {
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             val image = createRef()
             Image(
                 painter = painterResource(R.drawable.ic_baseline_group_24),

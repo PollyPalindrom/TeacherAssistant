@@ -21,7 +21,7 @@ import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
 fun SignInScreen(
     listener: SignInListener
 ) {
-    val activity = LocalContext.current as? Activity
+
     Scaffold(topBar = { CustomTopBar() }, modifier = Modifier.fillMaxSize()) {
         ConstraintLayout {
             val (teacherButton, text, studentButton) = createRefs()
