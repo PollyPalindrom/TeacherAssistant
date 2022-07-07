@@ -6,10 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.*
-import com.example.teacherassistant.domain.use_cases.GetCollectionReferenceForUserInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetNoteInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
-import com.example.teacherassistant.domain.use_cases.PostNotificationUseCase
+import com.example.teacherassistant.domain.use_cases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +21,8 @@ class NotesViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getNoteInfoUseCase: GetNoteInfoUseCase,
     private val postNotificationUseCase: PostNotificationUseCase,
-    private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase
+    private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase,
+    private val uploadPictureUseCase: UploadPictureUseCase
 ) : ViewModel() {
     private val noteList = mutableStateOf(NotesState())
     val noteListOpen: State<NotesState?> = noteList
@@ -44,7 +42,7 @@ class NotesViewModel @Inject constructor(
         groupId: String,
         title: String,
         text: String,
-        uris:List<Uri>
+        uris: List<Uri>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteInfo: MutableMap<String, Any> = mutableMapOf()
@@ -84,7 +82,18 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    private fun uploadPictures(uris: List<Uri>){
+    private fun uploadPictures(uris: List<Uri>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            uris.forEach { uri ->
+                uri.lastPathSegment?.let {lastPathSegment->
+                    uploadPictureUseCase.getUploadPictureTask(uri, lastPathSegment).addOnSuccessListener {
+                        uploadPictureUseCase.getResultUriTask(lastPathSegment).addOnSuccessListener {
+
+                        }
+                    }
+                }
+            }
+        }
 
     }
 

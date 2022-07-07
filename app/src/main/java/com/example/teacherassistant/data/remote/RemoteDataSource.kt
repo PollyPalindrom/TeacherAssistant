@@ -1,5 +1,6 @@
 package com.example.teacherassistant.data.remote
 
+import android.net.Uri
 import com.example.teacherassistant.common.PushNotification
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
@@ -8,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -15,7 +18,8 @@ import javax.inject.Inject
 class RemoteDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val messageApi: MessageApi
+    private val messageApi: MessageApi,
+    private val storageReference: StorageReference
 ) {
     fun getCurrentUserFullName(): String? {
         return firebaseAuth.currentUser?.displayName
@@ -90,4 +94,11 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody> =
         messageApi.postNotification(notification)
+
+    fun getUploadPictureTask(uri: Uri, imageName: String): UploadTask =
+        storageReference.child(imageName)
+            .putFile(uri)
+
+    fun getResultUriTask(imageName: String): Task<Uri> = storageReference.child(imageName).downloadUrl
+
 }

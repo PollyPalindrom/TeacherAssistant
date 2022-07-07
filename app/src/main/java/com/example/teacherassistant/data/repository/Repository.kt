@@ -1,5 +1,6 @@
 package com.example.teacherassistant.data.repository
 
+import android.net.Uri
 import com.example.teacherassistant.common.PushNotification
 import com.example.teacherassistant.data.remote.RemoteDataSource
 import com.google.android.gms.tasks.Task
@@ -7,6 +8,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.storage.UploadTask
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -105,4 +107,9 @@ class Repository @Inject constructor(
     suspend fun postNotification(notification: PushNotification): Response<ResponseBody> =
         remoteDataSource.postNotification(notification)
 
+    fun getUploadPictureTask(uri: Uri, imageName: String): UploadTask =
+        remoteDataSource.getUploadPictureTask(uri, imageName)
+
+    fun getResultUriTask(imageName: String): Task<Uri> =
+        remoteDataSource.getResultUriTask(imageName)
 }

@@ -248,7 +248,6 @@ fun PictureItem(uri: Uri, delete: (uri: Uri) -> Unit) {
                     .clickable { delete(uri) }
                     .align(Alignment.End)
             )
-
             Image(
                 painter = rememberAsyncImagePainter(uri),
                 contentDescription = null,
