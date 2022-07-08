@@ -40,8 +40,12 @@ fun MainScreen(
     listener: PostToastListener,
     role: String?
 ) {
+
     val state = viewModel.groupsListOpen.value
     val scaffoldState = rememberScaffoldState()
+    var groupDialog by rememberSaveable { mutableStateOf(false) }
+    val onClick = { groupDialog = false }
+
     FirebaseMessaging.getInstance().token.addOnSuccessListener {
         FirebaseService.token = it
         viewModel.setNewToken(
@@ -57,9 +61,6 @@ fun MainScreen(
             Constants.COLLECTION_SECOND_PATH
         )
     }
-    var groupDialog by rememberSaveable { mutableStateOf(false) }
-
-    val onClick = { groupDialog = false }
     Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
         if (role == Constants.TEACHER) {
             FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
@@ -172,46 +173,14 @@ fun GroupItem(
 
                 }
             }
-            if (role == Constants.TEACHER) {
-                IconButton(
-                    onClick = { emailDialog = !emailDialog },
-                    modifier = Modifier.background(MaterialTheme.colors.primary)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_baseline_add_24),
-                        contentDescription = ""
-                    )
-                }
-                IconButton(onClick = {
-                    deleteGroup(group)
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                        contentDescription = "Open students list"
-
-                    )
-                }
-            }
-            IconButton(onClick = {
-                navigateToStudentsList()
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_person_24),
-                    contentDescription = "Open students list"
-
-                )
-            }
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                    contentDescription = if (expanded) {
-                        stringResource(R.string.show_less)
-                    } else {
-                        stringResource(R.string.show_more)
-                    }
-
-                )
-            }
+            Buttons(
+                expanded = expanded,
+                expandOnClick = { expanded = !expanded },
+                openStudentList = { navigateToStudentsList() },
+                deleteGroup = { deleteGroup(group) },
+                openEmailDialog = { emailDialog = !emailDialog },
+                role = role
+            )
         }
     }
     if (emailDialog) {
@@ -224,6 +193,56 @@ fun GroupItem(
                     postToast(R.string.textErrorMessage)
                 }
             })
+    }
+}
+
+@Composable
+fun Buttons(
+    expanded: Boolean,
+    expandOnClick: () -> Unit,
+    openStudentList: () -> Unit,
+    deleteGroup: () -> Unit,
+    openEmailDialog: () -> Unit,
+    role: String
+) {
+    if (role == Constants.TEACHER) {
+        IconButton(
+            onClick = { openEmailDialog() },
+            modifier = Modifier.background(MaterialTheme.colors.primary)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_baseline_add_24),
+                contentDescription = ""
+            )
+        }
+        IconButton(onClick = {
+            deleteGroup()
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_delete_24),
+                contentDescription = "Open students list"
+
+            )
+        }
+    }
+    IconButton(onClick = {
+        openStudentList()
+    }) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_person_24),
+            contentDescription = "Open students list"
+
+        )
+    }
+    IconButton(onClick = { expandOnClick() }) {
+        Icon(
+            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = if (expanded) {
+                stringResource(R.string.show_less)
+            } else {
+                stringResource(R.string.show_more)
+            }
+        )
     }
 }
 

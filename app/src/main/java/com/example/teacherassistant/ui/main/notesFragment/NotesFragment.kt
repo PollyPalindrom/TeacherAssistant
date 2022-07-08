@@ -43,7 +43,7 @@ fun NotesScreen(
     val state = viewModel.noteListOpen.value
     val scaffoldState = rememberScaffoldState()
     var noteDialog by rememberSaveable { mutableStateOf(false) }
-    val onClick = { noteDialog = false }
+
     if (groupId != null) {
         viewModel.subscribeNoteListChanges(
             Constants.COLLECTION_FIRST_PATH,
@@ -73,13 +73,24 @@ fun NotesScreen(
                                 note,
                                 groupId
                             )
-                        })
+                        },
+                            getUris = { setUris ->
+                                viewModel.getUrisList(
+                                    Constants.COLLECTION_FIRST_PATH,
+                                    Constants.COLLECTION_SECOND_PATH,
+                                    groupId,
+                                    Constants.COLLECTION_THIRD_PATH,
+                                    note.id,
+                                    Constants.COLLECTION_FORTH_PATH,
+                                    setUris
+                                )
+                            })
                     }
                 }
             }
         }
         if (noteDialog) {
-            NoteDialog(onClick = onClick, createNote = { name, text, uris ->
+            NoteDialog(onClick = { noteDialog = false }, createNote = { name, text, uris ->
                 noteDialog = false
                 if (name.isNotBlank() && text.isNotBlank()
                 ) {
@@ -91,7 +102,8 @@ fun NotesScreen(
                             groupId,
                             name,
                             text,
-                            uris
+                            uris,
+                            Constants.COLLECTION_FORTH_PATH
                         )
                     }
 
@@ -104,8 +116,14 @@ fun NotesScreen(
 }
 
 @Composable
-fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
+fun NoteItem(
+    note: Note,
+    role: String,
+    deleteNote: (note: Note) -> Unit,
+    getUris: (setUris: (List<Uri>) -> Unit) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
+    var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
 
     Surface(
         color = MaterialTheme.colors.primary,
@@ -134,6 +152,11 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
                     Text(
                         text = note.message
                     )
+                    LazyRow(modifier = Modifier.padding(vertical = 4.dp)) {
+                        items(pictures) { picture ->
+                            PictureItem(uri = picture)
+                        }
+                    }
                 }
             }
             if (role == Constants.TEACHER) {
@@ -146,7 +169,10 @@ fun NoteItem(note: Note, role: String, deleteNote: (note: Note) -> Unit) {
                     )
                 }
             }
-            IconButton(onClick = { expanded = !expanded }) {
+            IconButton(onClick = {
+                expanded = !expanded
+                getUris { list -> pictures = list }
+            }) {
                 Icon(
                     imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                     contentDescription = if (expanded) {
@@ -248,6 +274,23 @@ fun PictureItem(uri: Uri, delete: (uri: Uri) -> Unit) {
                     .clickable { delete(uri) }
                     .align(Alignment.End)
             )
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp),
+            )
+        }
+    }
+}
+
+@Composable
+fun PictureItem(uri: Uri) {
+    Surface(
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier
+            .padding(vertical = 1.dp, horizontal = 1.dp)
+    ) {
+        Column {
             Image(
                 painter = rememberAsyncImagePainter(uri),
                 contentDescription = null,

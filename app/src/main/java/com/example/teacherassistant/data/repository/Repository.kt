@@ -112,4 +112,42 @@ class Repository @Inject constructor(
 
     fun getResultUriTask(imageName: String): Task<Uri> =
         remoteDataSource.getResultUriTask(imageName)
+
+    fun getCollectionReferenceForPictures(
+        collectionFirstPath: String,
+        uid: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String
+    ): CollectionReference = remoteDataSource.getCollectionReferenceForPictures(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath,
+        noteId,
+        collectionForthPath
+    )
+
+    fun getDocumentReferenceForPictures(
+        collectionFirstPath: String,
+        uid: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String,
+        pictureUri: String
+    ): DocumentReference = remoteDataSource.getDocumentReferenceForPictures(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath,
+        noteId,
+        collectionForthPath,
+        pictureUri
+    )
 }

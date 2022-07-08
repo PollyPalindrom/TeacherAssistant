@@ -1,6 +1,7 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -22,8 +23,10 @@ class NotesViewModel @Inject constructor(
     private val getNoteInfoUseCase: GetNoteInfoUseCase,
     private val postNotificationUseCase: PostNotificationUseCase,
     private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase,
-    private val uploadPictureUseCase: UploadPictureUseCase
+    private val uploadPictureUseCase: UploadPictureUseCase,
+    private val getPictureInfoUseCase: GetPictureInfoUseCase
 ) : ViewModel() {
+
     private val noteList = mutableStateOf(NotesState())
     val noteListOpen: State<NotesState?> = noteList
 
@@ -42,7 +45,8 @@ class NotesViewModel @Inject constructor(
         groupId: String,
         title: String,
         text: String,
-        uris: List<Uri>
+        uris: List<Uri>,
+        collectionForthPath: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteInfo: MutableMap<String, Any> = mutableMapOf()
@@ -57,14 +61,23 @@ class NotesViewModel @Inject constructor(
                     collectionThirdPath,
                     groupId + title
                 ).set(noteInfo)
-                // необходимо создать юзкейс, чтобы создать у заметки коллекцию, в которой будут документы с url пикч
+                uploadPictures(
+                    uris,
+                    collectionFirstPath,
+                    collectionSecondPath,
+                    groupId,
+                    collectionThirdPath,
+                    groupId + title,
+                    collectionForthPath
+                )
             }
             updateStudentNotes(
                 collectionFirstPath,
                 collectionSecondPath,
                 collectionThirdPath,
                 groupId,
-                noteInfo
+                noteInfo,
+                collectionForthPath
             )
             getUserUid()?.let { id ->
                 getNoteInfoUseCase.getCollectionReference(
@@ -82,28 +95,74 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    private fun uploadPictures(uris: List<Uri>) {
+    fun getUrisList(
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String,
+        setUris: (urisList: List<Uri>) -> Unit
+    ) {
+        val uris = mutableListOf<Uri>()
+        getUserUid()?.let {
+            getPictureInfoUseCase.getCollectionReferenceForPictures(
+                collectionFirstPath,
+                it, collectionSecondPath, groupId, collectionThirdPath, noteId, collectionForthPath
+            ).get().addOnSuccessListener { pictures ->
+                for (picture in pictures) {
+                    uris.add(Uri.parse(picture.id.replace("|","/")))
+                }
+                setUris(uris)
+            }
+        }
+    }
+
+    private fun uploadPictures(
+        uris: List<Uri>,
+        collectionFirstPath: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             uris.forEach { uri ->
-                uri.lastPathSegment?.let {lastPathSegment->
-                    uploadPictureUseCase.getUploadPictureTask(uri, lastPathSegment).addOnSuccessListener {
-                        uploadPictureUseCase.getResultUriTask(lastPathSegment).addOnSuccessListener {
-
+                uri.lastPathSegment?.let { lastPathSegment ->
+                    uploadPictureUseCase.getUploadPictureTask(uri, "images/$lastPathSegment")
+                        .continueWithTask {
+                            uploadPictureUseCase.getResultUriTask("images/$lastPathSegment")
+                        }.addOnCompleteListener { resultUri ->
+                            Log.println(Log.ASSERT,"path","before")
+                            val pictureInfo = mutableMapOf<String,String>()
+                            pictureInfo["Picture Uri"] = resultUri.result.toString().replace("/","|")
+                            getUserUid()?.let { it1 ->
+                                getPictureInfoUseCase.getDocumentReferenceForPictures(
+                                    collectionFirstPath,
+                                    it1,
+                                    collectionSecondPath,
+                                    groupId,
+                                    collectionThirdPath,
+                                    noteId,
+                                    collectionForthPath,
+                                    resultUri.result.toString().replace("/","|")
+                                ).set(pictureInfo)
+                            }
+                            Log.println(Log.ASSERT,"path","after")
                         }
-                    }
                 }
             }
         }
-
     }
-
 
     private fun updateStudentNotes(
         collectionFirstPath: String,
         collectionSecondPath: String,
         collectionThirdPath: String,
         groupId: String,
-        noteInfo: MutableMap<String, Any>
+        noteInfo: MutableMap<String, Any>,
+        collectionForthPath: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             getUserUid()?.let {
@@ -128,9 +187,30 @@ class NotesViewModel @Inject constructor(
                                         collectionThirdPath,
                                         groupId + noteInfo[Constants.TITLE]
                                     ).set(noteInfo)
+                                    getPictureInfoUseCase.getCollectionReferenceForPictures(
+                                        collectionFirstPath,
+                                        it,
+                                        collectionSecondPath,
+                                        groupId,
+                                        collectionThirdPath,
+                                        groupId + noteInfo[Constants.TITLE],
+                                        collectionForthPath
+                                    ).get().addOnSuccessListener { pictures ->
+                                        for (picture in pictures) {
+                                            getPictureInfoUseCase.getDocumentReferenceForPictures(
+                                                collectionFirstPath,
+                                                user.id,
+                                                collectionSecondPath,
+                                                groupId,
+                                                collectionThirdPath,
+                                                groupId + noteInfo[Constants.TITLE],
+                                                collectionForthPath,
+                                                picture.id
+                                            )
+                                        }
+                                    }
                                 }
                             }
-
                         }
                     }
                 }
@@ -153,17 +233,14 @@ class NotesViewModel @Inject constructor(
                     groupId,
                     collectionThirdPath
                 ).addSnapshotListener { value, error ->
-                    println(value?.size())
                     if (value != null) {
                         val notes = mutableListOf<Note>()
                         for (note in value) {
-                            println(note.data)
                             val title = note.data[Constants.TITLE].toString()
                             val text = note.data[Constants.TEXT].toString()
                             notes.add(Note(title, text, note.id))
                         }
                         noteList.value = NotesState(notes)
-                        println(notes)
                     }
                     if (error?.localizedMessage != null) noteList.value =
                         NotesState(error = error.localizedMessage)
@@ -252,7 +329,6 @@ class NotesViewModel @Inject constructor(
                                 ).delete()
                             }
                         }
-
                     }
                 }
             }

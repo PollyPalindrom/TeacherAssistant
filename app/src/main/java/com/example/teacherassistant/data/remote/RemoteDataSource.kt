@@ -99,6 +99,31 @@ class RemoteDataSource @Inject constructor(
         storageReference.child(imageName)
             .putFile(uri)
 
-    fun getResultUriTask(imageName: String): Task<Uri> = storageReference.child(imageName).downloadUrl
+    fun getResultUriTask(imageName: String): Task<Uri> =
+        storageReference.child(imageName).downloadUrl
 
+    fun getCollectionReferenceForPictures(
+        collectionFirstPath: String,
+        uid: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String
+    ): CollectionReference = firestore.collection(collectionFirstPath).document(uid)
+        .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
+        .document(noteId).collection(collectionForthPath)
+
+    fun getDocumentReferenceForPictures(
+        collectionFirstPath: String,
+        uid: String,
+        collectionSecondPath: String,
+        groupId: String,
+        collectionThirdPath: String,
+        noteId: String,
+        collectionForthPath: String,
+        pictureUri: String
+    ): DocumentReference = firestore.collection(collectionFirstPath).document(uid)
+        .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
+        .document(noteId).collection(collectionForthPath).document(pictureUri)
 }
