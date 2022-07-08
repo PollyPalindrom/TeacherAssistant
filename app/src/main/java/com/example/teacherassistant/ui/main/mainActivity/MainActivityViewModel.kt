@@ -27,10 +27,6 @@ class MainActivityViewModel @Inject constructor(
     ViewModel() {
     private val checkRoleManager = CheckRoleManager
 
-    fun getUserState(): Boolean {
-        return getUserInfoUseCase.getUserState()
-    }
-
     private fun getUserUid(): String? {
         return getUserUidUseCase.getUserUid()
     }

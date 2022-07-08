@@ -32,6 +32,9 @@ class Constants {
         const val MESSAGE_TITLE = "title"
         const val GROUP_ID = "GroupId"
         const val TEACHER_ID = "TeacherId"
-        const val COLLECTION_FORTH_PATH ="Pictures"
+        const val COLLECTION_FORTH_PATH = "Pictures"
+        const val PICK_PICTURE_PATH = "image/*"
+        const val UPLOAD_PICTURE_PATH = "images/"
+        const val PICTURE_URI = "Picture Uri"
     }
 }

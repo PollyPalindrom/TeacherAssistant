@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     nextFragmentCallback =
                         { role ->
                             navController.popBackStack()
-                            navController.navigate(Screen.GroupsScreen.route + "?Role=$role")
+                            navController.navigate(Screen.GroupsScreen.route + "?${Constants.ROLE}=$role")
                         }
                 }
             }

@@ -1,7 +1,6 @@
 package com.example.teacherassistant.ui.main.notesFragment
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -111,7 +110,7 @@ class NotesViewModel @Inject constructor(
                 it, collectionSecondPath, groupId, collectionThirdPath, noteId, collectionForthPath
             ).get().addOnSuccessListener { pictures ->
                 for (picture in pictures) {
-                    uris.add(Uri.parse(picture.id.replace("|","/")))
+                    uris.add(Uri.parse(picture.id.replace("|", "/")))
                 }
                 setUris(uris)
             }
@@ -130,13 +129,16 @@ class NotesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             uris.forEach { uri ->
                 uri.lastPathSegment?.let { lastPathSegment ->
-                    uploadPictureUseCase.getUploadPictureTask(uri, "images/$lastPathSegment")
+                    uploadPictureUseCase.getUploadPictureTask(
+                        uri,
+                        "${Constants.UPLOAD_PICTURE_PATH}$lastPathSegment"
+                    )
                         .continueWithTask {
-                            uploadPictureUseCase.getResultUriTask("images/$lastPathSegment")
+                            uploadPictureUseCase.getResultUriTask("${Constants.UPLOAD_PICTURE_PATH}$lastPathSegment")
                         }.addOnCompleteListener { resultUri ->
-                            Log.println(Log.ASSERT,"path","before")
-                            val pictureInfo = mutableMapOf<String,String>()
-                            pictureInfo["Picture Uri"] = resultUri.result.toString().replace("/","|")
+                            val pictureInfo = mutableMapOf<String, String>()
+                            pictureInfo[Constants.PICTURE_URI] =
+                                resultUri.result.toString().replace("/", "|")
                             getUserUid()?.let { it1 ->
                                 getPictureInfoUseCase.getDocumentReferenceForPictures(
                                     collectionFirstPath,
@@ -146,10 +148,9 @@ class NotesViewModel @Inject constructor(
                                     collectionThirdPath,
                                     noteId,
                                     collectionForthPath,
-                                    resultUri.result.toString().replace("/","|")
+                                    resultUri.result.toString().replace("/", "|")
                                 ).set(pictureInfo)
                             }
-                            Log.println(Log.ASSERT,"path","after")
                         }
                 }
             }

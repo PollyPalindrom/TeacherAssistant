@@ -165,7 +165,7 @@ fun NoteItem(
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                        contentDescription = "Open students list"
+                        contentDescription = stringResource(id = R.string.open_student_list_button_description)
                     )
                 }
             }
@@ -236,14 +236,14 @@ fun NoteDialog(
                 }
 
                 IconButton(onClick = {
-                    launcher.launch("image/*")
+                    launcher.launch(Constants.PICK_PICTURE_PATH)
                 }) {
                     Row {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                            contentDescription = "Add picture",
+                            contentDescription = stringResource(id = R.string.add_button_description),
                         )
-                        Text(text = "Add picture")
+                        Text(text = stringResource(id = R.string.add_button_text))
                     }
                 }
             }
@@ -259,38 +259,21 @@ fun NoteDialog(
 }
 
 @Composable
-fun PictureItem(uri: Uri, delete: (uri: Uri) -> Unit) {
+fun PictureItem(uri: Uri, delete: ((uri: Uri) -> Unit)? = null) {
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier
             .padding(vertical = 1.dp, horizontal = 1.dp)
     ) {
         Column {
-            Icon(
+            if (delete != null) Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                contentDescription = "Delete picture",
+                contentDescription = stringResource(id = R.string.delete_picture_button_description),
                 modifier = Modifier
                     .wrapContentHeight()
                     .clickable { delete(uri) }
                     .align(Alignment.End)
             )
-            Image(
-                painter = rememberAsyncImagePainter(uri),
-                contentDescription = null,
-                modifier = Modifier.size(50.dp),
-            )
-        }
-    }
-}
-
-@Composable
-fun PictureItem(uri: Uri) {
-    Surface(
-        color = MaterialTheme.colors.primary,
-        modifier = Modifier
-            .padding(vertical = 1.dp, horizontal = 1.dp)
-    ) {
-        Column {
             Image(
                 painter = rememberAsyncImagePainter(uri),
                 contentDescription = null,

@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.teacherassistant.R
@@ -86,7 +87,7 @@ fun StudentItem(
             if (role == Constants.TEACHER) IconButton(onClick = { delete() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                    contentDescription = "Delete student from group"
+                    contentDescription = stringResource(id = R.string.delete_student_from_group_button_description)
                 )
             }
         }

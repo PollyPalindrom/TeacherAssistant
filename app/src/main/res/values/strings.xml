@@ -40,4 +40,11 @@
     <string name="notifications_message">Students in certain group will be notified if you create new note</string>
     <string name="finish_button">Finish</string>
     <string name="image_desc">Pager Image</string>
+    <string name="add_button_description">Add picture</string>
+    <string name="add_button_text">Add picture</string>
+    <string name="open_student_list_button_description">Open students list</string>
+    <string name="delete_group_button_description">Delete group</string>
+    <string name="add_new_student_email_button_description">Add new student</string>
+    <string name="delete_picture_button_description">Delete picture</string>
+    <string name="delete_student_from_group_button_description">Delete student from group</string>
 </resources>

@@ -212,7 +212,7 @@ fun Buttons(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_baseline_add_24),
-                contentDescription = ""
+                contentDescription = stringResource(id = R.string.add_new_student_email_button_description)
             )
         }
         IconButton(onClick = {
@@ -220,8 +220,7 @@ fun Buttons(
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                contentDescription = "Open students list"
-
+                contentDescription = stringResource(id = R.string.delete_group_button_description)
             )
         }
     }
@@ -230,8 +229,7 @@ fun Buttons(
     }) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_person_24),
-            contentDescription = "Open students list"
-
+            contentDescription = stringResource(id = R.string.open_student_list_button_description)
         )
     }
     IconButton(onClick = { expandOnClick() }) {

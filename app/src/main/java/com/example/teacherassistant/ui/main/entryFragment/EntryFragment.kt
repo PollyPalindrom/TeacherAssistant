@@ -31,7 +31,7 @@ fun EntryImage(
     val nextFragmentCallback =
         { role: String ->
             navController.popBackStack()
-            navController.navigate(Screen.GroupsScreen.route + "?Role=$role")
+            navController.navigate(Screen.GroupsScreen.route + "?${Constants.ROLE}=$role")
         }
     LaunchedEffect(key1 = true){
         if (viewModel.getUserState()) {
