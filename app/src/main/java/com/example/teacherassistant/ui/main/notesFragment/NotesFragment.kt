@@ -261,7 +261,7 @@ fun NoteDialog(
 @Composable
 fun PictureItem(uri: Uri, delete: ((uri: Uri) -> Unit)? = null) {
     Surface(
-        color = MaterialTheme.colors.primary,
+        color = if (delete != null) MaterialTheme.colors.primary else MaterialTheme.colors.background,
         modifier = Modifier
             .padding(vertical = 1.dp, horizontal = 1.dp)
     ) {
