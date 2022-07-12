@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.mainFragment
+package com.example.teacherassistant.ui.main.mainScreen
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
@@ -28,7 +28,7 @@ import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
 import com.example.teacherassistant.common.Screen
-import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
+import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.google.firebase.messaging.FirebaseMessaging
 

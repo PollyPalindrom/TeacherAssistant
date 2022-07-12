@@ -1,6 +1,7 @@
 package com.example.teacherassistant.data.repository
 
 import android.net.Uri
+import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PushNotification
 import com.example.teacherassistant.data.remote.MessageApi
 import com.example.teacherassistant.data.remote.RemoteDataSource
@@ -14,10 +15,12 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import okhttp3.ResponseBody
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 
 class Repository @Inject constructor(
@@ -127,6 +130,10 @@ class Repository @Inject constructor(
 
     override fun getResultUriTask(imageName: String): Task<Uri> =
         storageReference.child(imageName).downloadUrl
+
+    override fun getFileDownloadTask(imageName: String, destFile: File): FileDownloadTask {
+        return storageReference.child(Constants.UPLOAD_PICTURE_PATH + imageName).getFile(destFile)
+    }
 
     override fun getCollectionReferenceForPictures(
         collectionFirstPath: String,

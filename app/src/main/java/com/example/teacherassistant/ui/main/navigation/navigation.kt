@@ -10,11 +10,11 @@ import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
 import com.example.teacherassistant.common.Screen
 import com.example.teacherassistant.common.SignInListener
-import com.example.teacherassistant.ui.main.entryFragment.EntryImage
-import com.example.teacherassistant.ui.main.mainFragment.MainScreen
+import com.example.teacherassistant.ui.main.entryScreen.EntryImage
+import com.example.teacherassistant.ui.main.mainScreen.MainScreen
 import com.example.teacherassistant.ui.main.notesFragment.NotesScreen
 import com.example.teacherassistant.ui.main.onBoarding.WelcomeScreen
-import com.example.teacherassistant.ui.main.signInFragment.SignInScreen
+import com.example.teacherassistant.ui.main.signInScreen.SignInScreen
 import com.example.teacherassistant.ui.main.studentsList.StudentsList
 import com.google.accompanist.pager.ExperimentalPagerApi
 

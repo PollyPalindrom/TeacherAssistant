@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
+import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 
 @Composable
 fun StudentsList(

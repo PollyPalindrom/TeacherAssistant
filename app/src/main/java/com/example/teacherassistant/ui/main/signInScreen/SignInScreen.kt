@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.signInFragment
+package com.example.teacherassistant.ui.main.signInScreen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
@@ -11,7 +11,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.SignInListener
-import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
+import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 
 @Composable
 fun SignInScreen(

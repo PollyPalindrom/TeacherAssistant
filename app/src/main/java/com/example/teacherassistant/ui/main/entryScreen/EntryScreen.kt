@@ -1,6 +1,5 @@
-package com.example.teacherassistant.ui.main.entryFragment
+package com.example.teacherassistant.ui.main.entryScreen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,7 +23,7 @@ import com.example.teacherassistant.common.Screen
 
 @Composable
 fun EntryImage(
-    viewModel: EntryFragmentViewModel = hiltViewModel(),
+    viewModel: EntryScreenViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
 

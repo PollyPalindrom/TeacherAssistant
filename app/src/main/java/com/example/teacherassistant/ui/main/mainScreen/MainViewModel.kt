@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.mainFragment
+package com.example.teacherassistant.ui.main.mainScreen
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

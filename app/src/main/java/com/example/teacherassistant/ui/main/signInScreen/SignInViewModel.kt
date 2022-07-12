@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.signInFragment
+package com.example.teacherassistant.ui.main.signInScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

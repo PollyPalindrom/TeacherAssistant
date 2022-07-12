@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.entryFragment
+package com.example.teacherassistant.ui.main.entryScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.teacherassistant.common.CheckRoleManager
@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class EntryFragmentViewModel @Inject constructor(
+class EntryScreenViewModel @Inject constructor(
     private val getDocumentReferenceForUserInfoUseCase: GetDocumentReferenceForUserInfoUseCase,
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase

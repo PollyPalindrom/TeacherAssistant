@@ -30,7 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
-import com.example.teacherassistant.ui.main.entryFragment.CustomTopBar
+import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
