@@ -1,9 +1,9 @@
-package com.example.teacherassistant.data.remote
+package com.example.teacherassistant.domain.repository
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 
-interface RemoteDataSource {
+interface DataSourceRepository {
 
     fun getDocumentReferenceForUserInfo(collectionPath: String, uid: String): DocumentReference
 
@@ -59,4 +59,5 @@ interface RemoteDataSource {
         collectionForthPath: String,
         pictureUri: String
     ): DocumentReference
+
 }
