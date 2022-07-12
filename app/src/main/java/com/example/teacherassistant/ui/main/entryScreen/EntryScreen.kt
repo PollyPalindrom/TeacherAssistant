@@ -4,12 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -32,7 +31,7 @@ fun EntryImage(
             navController.popBackStack()
             navController.navigate(Screen.GroupsScreen.route + "?${Constants.ROLE}=$role")
         }
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         if (viewModel.getUserState()) {
             viewModel.checkRole(
                 nextFragmentCallback,
@@ -72,8 +71,26 @@ fun EntryImage(
 }
 
 @Composable
-fun CustomTopBar() {
-    TopAppBar(backgroundColor = MaterialTheme.colors.primaryVariant) {
-        Text(stringResource(R.string.app_name))
-    }
+fun CustomTopBar(
+    savePicture: (() -> Unit)? = null
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    TopAppBar(
+        backgroundColor = MaterialTheme.colors.primaryVariant,
+        title = { Text(stringResource(R.string.app_name)) },
+        actions = {
+            if (savePicture != null) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    DropdownMenuItem(onClick = { savePicture() }) {
+                        Icon(
+                            Icons.Filled.Save,
+                            stringResource(id = R.string.download_button_description)
+                        )
+                    }
+                }
+            }
+        })
 }

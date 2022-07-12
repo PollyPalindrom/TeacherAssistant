@@ -1,5 +1,6 @@
 package com.example.teacherassistant.ui.main.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -12,8 +13,9 @@ import com.example.teacherassistant.common.Screen
 import com.example.teacherassistant.common.SignInListener
 import com.example.teacherassistant.ui.main.entryScreen.EntryImage
 import com.example.teacherassistant.ui.main.mainScreen.MainScreen
-import com.example.teacherassistant.ui.main.notesFragment.NotesScreen
+import com.example.teacherassistant.ui.main.notesScreen.NotesScreen
 import com.example.teacherassistant.ui.main.onBoarding.WelcomeScreen
+import com.example.teacherassistant.ui.main.pictureScreen.PictureScreen
 import com.example.teacherassistant.ui.main.signInScreen.SignInScreen
 import com.example.teacherassistant.ui.main.studentsList.StudentsList
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -53,7 +55,8 @@ fun NavGraph(
             NotesScreen(
                 listener = postToastListener,
                 role = it.arguments?.getString(Constants.ROLE),
-                groupId = it.arguments?.getString(Constants.GROUP_ID)
+                groupId = it.arguments?.getString(Constants.GROUP_ID),
+                navHostController = navController
             )
         }
         composable(
@@ -81,6 +84,14 @@ fun NavGraph(
             StudentsList(
                 role = it.arguments?.getString(Constants.ROLE),
                 groupId = it.arguments?.getString(Constants.GROUP_ID)
+            )
+        }
+        composable(
+            route = Screen.PictureScreen.route +
+                    "?${Constants.URI}={${Constants.URI}}"
+        ) {
+            PictureScreen(
+                uri = Uri.parse(it.arguments?.getString(Constants.URI))
             )
         }
     }

@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
 
         }
     }
-    private val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

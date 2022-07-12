@@ -36,5 +36,7 @@ class Constants {
         const val PICK_PICTURE_PATH = "image/*"
         const val UPLOAD_PICTURE_PATH = "images/"
         const val PICTURE_URI = "Picture Uri"
+        const val DOWNLOAD_PICTURE_PATH = "TeacherAssistant/"
+        const val URI = "Uri"
     }
 }

@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.notesFragment
+package com.example.teacherassistant.ui.main.notesScreen
 
 import android.net.Uri
 import androidx.compose.runtime.State

@@ -1,4 +1,4 @@
-package com.example.teacherassistant.ui.main.notesFragment
+package com.example.teacherassistant.ui.main.notesScreen
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -26,10 +26,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.teacherassistant.R
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.common.PostToastListener
+import com.example.teacherassistant.common.Screen
 import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -37,6 +39,7 @@ import com.example.teacherassistant.ui.main.entryScreen.CustomTopBar
 fun NotesScreen(
     viewModel: NotesViewModel = hiltViewModel(),
     listener: PostToastListener,
+    navHostController: NavHostController,
     role: String?,
     groupId: String?
 ) {
@@ -84,6 +87,12 @@ fun NotesScreen(
                                     Constants.COLLECTION_FORTH_PATH,
                                     setUris
                                 )
+                            },
+                            openPictureScreen = { uri: String ->
+                                navHostController.navigate(
+                                    Screen.PictureScreen.route +
+                                            "?${Constants.URI}=$uri"
+                                )
                             })
                     }
                 }
@@ -120,7 +129,8 @@ fun NoteItem(
     note: Note,
     role: String,
     deleteNote: (note: Note) -> Unit,
-    getUris: (setUris: (List<Uri>) -> Unit) -> Unit
+    getUris: (setUris: (List<Uri>) -> Unit) -> Unit,
+    openPictureScreen: (uri: String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
@@ -154,7 +164,9 @@ fun NoteItem(
                     )
                     LazyRow(modifier = Modifier.padding(vertical = 4.dp)) {
                         items(pictures) { picture ->
-                            PictureItem(uri = picture)
+                            PictureItem(
+                                uri = picture,
+                                openPictureScreen = { uri: String -> openPictureScreen(uri) })
                         }
                     }
                 }
@@ -259,7 +271,11 @@ fun NoteDialog(
 }
 
 @Composable
-fun PictureItem(uri: Uri, delete: ((uri: Uri) -> Unit)? = null) {
+fun PictureItem(
+    uri: Uri,
+    delete: ((uri: Uri) -> Unit)? = null,
+    openPictureScreen: ((uri: String) -> Unit)? = null
+) {
     Surface(
         color = if (delete != null) MaterialTheme.colors.primary else MaterialTheme.colors.background,
         modifier = Modifier
@@ -274,10 +290,15 @@ fun PictureItem(uri: Uri, delete: ((uri: Uri) -> Unit)? = null) {
                     .clickable { delete(uri) }
                     .align(Alignment.End)
             )
+            val modifier = Modifier.size(50.dp)
             Image(
                 painter = rememberAsyncImagePainter(uri),
                 contentDescription = null,
-                modifier = Modifier.size(50.dp),
+                modifier = if (openPictureScreen == null) modifier else modifier.clickable {
+                    openPictureScreen(
+                        uri.toString()
+                    )
+                },
             )
         }
     }
