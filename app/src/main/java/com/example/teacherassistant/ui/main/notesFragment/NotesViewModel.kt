@@ -59,25 +59,19 @@ class NotesViewModel @Inject constructor(
                     groupId,
                     collectionThirdPath,
                     groupId + title
-                ).set(noteInfo)
-                uploadPictures(
-                    uris,
-                    collectionFirstPath,
-                    collectionSecondPath,
-                    groupId,
-                    collectionThirdPath,
-                    groupId + title,
-                    collectionForthPath
-                )
+                ).set(noteInfo).addOnSuccessListener {
+                    uploadPictures(
+                        uris,
+                        collectionFirstPath,
+                        collectionSecondPath,
+                        groupId,
+                        collectionThirdPath,
+                        groupId + title,
+                        collectionForthPath,
+                        noteInfo
+                    )
+                }
             }
-            updateStudentNotes(
-                collectionFirstPath,
-                collectionSecondPath,
-                collectionThirdPath,
-                groupId,
-                noteInfo,
-                collectionForthPath
-            )
             getUserUid()?.let { id ->
                 getNoteInfoUseCase.getCollectionReference(
                     collectionFirstPath,
@@ -124,9 +118,18 @@ class NotesViewModel @Inject constructor(
         groupId: String,
         collectionThirdPath: String,
         noteId: String,
-        collectionForthPath: String
+        collectionForthPath: String,
+        noteInfo: MutableMap<String, Any>
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        if (uris.isEmpty()) updateStudentNotes(
+            collectionFirstPath,
+            collectionSecondPath,
+            collectionThirdPath,
+            groupId,
+            noteInfo,
+            collectionForthPath
+        )
+        else viewModelScope.launch(Dispatchers.IO) {
             uris.forEach { uri ->
                 uri.lastPathSegment?.let { lastPathSegment ->
                     uploadPictureUseCase.getUploadPictureTask(
@@ -149,7 +152,16 @@ class NotesViewModel @Inject constructor(
                                     noteId,
                                     collectionForthPath,
                                     resultUri.result.toString().replace("/", "|")
-                                ).set(pictureInfo)
+                                ).set(pictureInfo).addOnSuccessListener {
+                                    updateStudentNotes(
+                                        collectionFirstPath,
+                                        collectionSecondPath,
+                                        collectionThirdPath,
+                                        groupId,
+                                        noteInfo,
+                                        collectionForthPath
+                                    )
+                                }
                             }
                         }
                 }
@@ -198,6 +210,8 @@ class NotesViewModel @Inject constructor(
                                         collectionForthPath
                                     ).get().addOnSuccessListener { pictures ->
                                         for (picture in pictures) {
+                                            val pictureInfo = mutableMapOf<String, String>()
+                                            pictureInfo[Constants.PICTURE_URI] = picture.id
                                             getPictureInfoUseCase.getDocumentReferenceForPictures(
                                                 collectionFirstPath,
                                                 user.id,
@@ -207,7 +221,7 @@ class NotesViewModel @Inject constructor(
                                                 groupId + noteInfo[Constants.TITLE],
                                                 collectionForthPath,
                                                 picture.id
-                                            )
+                                            ).set(pictureInfo)
                                         }
                                     }
                                 }
