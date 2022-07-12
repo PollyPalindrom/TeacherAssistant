@@ -1,6 +1,7 @@
 package com.example.teacherassistant.ui.main.navigation
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType

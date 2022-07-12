@@ -38,5 +38,6 @@ class Constants {
         const val PICTURE_URI = "Picture Uri"
         const val DOWNLOAD_PICTURE_PATH = "TeacherAssistant/"
         const val URI = "Uri"
+
     }
 }

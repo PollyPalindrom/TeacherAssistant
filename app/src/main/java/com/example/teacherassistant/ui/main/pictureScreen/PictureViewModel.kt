@@ -15,7 +15,7 @@ class PictureViewModel @Inject constructor(private val downloadPictureUseCase: D
 
     fun downloadPicture(imageName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val destFile = File.createTempFile(imageName, "jpg")
+            val destFile = File.createTempFile(imageName, ".jpg")
             downloadPictureUseCase.getFileDownloadTask(imageName, destFile)
         }
     }

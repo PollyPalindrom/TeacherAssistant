@@ -2,10 +2,12 @@ package com.example.teacherassistant.ui.main.entryScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -80,15 +82,20 @@ fun CustomTopBar(
         title = { Text(stringResource(R.string.app_name)) },
         actions = {
             if (savePicture != null) {
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                ) {
-                    DropdownMenuItem(onClick = { savePicture() }) {
-                        Icon(
-                            Icons.Filled.Save,
-                            stringResource(id = R.string.download_button_description)
-                        )
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = null)
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        DropdownMenuItem(onClick = { savePicture() }) {
+                            Icon(
+                                Icons.Filled.Save,
+                                stringResource(id = R.string.download_button_description)
+                            )
+                        }
                     }
                 }
             }

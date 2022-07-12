@@ -88,10 +88,10 @@ fun NotesScreen(
                                     setUris
                                 )
                             },
-                            openPictureScreen = { uri: String ->
+                            openPictureScreen = { uri: Uri ->
                                 navHostController.navigate(
                                     Screen.PictureScreen.route +
-                                            "?${Constants.URI}=$uri"
+                                            "?${Constants.URI}=${Uri.encode(uri.toString())}"
                                 )
                             })
                     }
@@ -130,7 +130,7 @@ fun NoteItem(
     role: String,
     deleteNote: (note: Note) -> Unit,
     getUris: (setUris: (List<Uri>) -> Unit) -> Unit,
-    openPictureScreen: (uri: String) -> Unit
+    openPictureScreen: (uri: Uri) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
@@ -166,7 +166,7 @@ fun NoteItem(
                         items(pictures) { picture ->
                             PictureItem(
                                 uri = picture,
-                                openPictureScreen = { uri: String -> openPictureScreen(uri) })
+                                openPictureScreen = { uri: Uri -> openPictureScreen(uri) })
                         }
                     }
                 }
@@ -274,7 +274,7 @@ fun NoteDialog(
 fun PictureItem(
     uri: Uri,
     delete: ((uri: Uri) -> Unit)? = null,
-    openPictureScreen: ((uri: String) -> Unit)? = null
+    openPictureScreen: ((uri: Uri) -> Unit)? = null
 ) {
     Surface(
         color = if (delete != null) MaterialTheme.colors.primary else MaterialTheme.colors.background,
@@ -296,7 +296,7 @@ fun PictureItem(
                 contentDescription = null,
                 modifier = if (openPictureScreen == null) modifier else modifier.clickable {
                     openPictureScreen(
-                        uri.toString()
+                        uri
                     )
                 },
             )
