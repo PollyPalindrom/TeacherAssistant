@@ -12,6 +12,4 @@ interface ImageRepository {
 
     fun getResultUriTask(imageName: String): Task<Uri>
 
-    fun getFileDownloadTask(imageName: String, destFile: File): FileDownloadTask
-
 }

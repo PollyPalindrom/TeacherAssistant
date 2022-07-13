@@ -1,8 +1,11 @@
 package com.example.teacherassistant.ui.main.mainActivity
 
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -13,10 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
 import com.example.teacherassistant.R
-import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.common.PostToastListener
-import com.example.teacherassistant.common.Screen
-import com.example.teacherassistant.common.SignInListener
+import com.example.teacherassistant.common.*
 import com.example.teacherassistant.ui.main.firebaseService.FirebaseService
 import com.example.teacherassistant.ui.main.navigation.NavGraph
 import com.example.teacherassistant.ui.main.themes.AppTheme
@@ -30,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), PostToastListener,
-    SignInListener {
+    SignInListener, DownloadPictureListener {
 
     private lateinit var nextFragmentCallback: (String) -> Unit
     private var status = ""
@@ -63,7 +63,8 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     NavGraph(
                         navController = navController,
                         postToastListener = this,
-                        signInListener = this
+                        signInListener = this,
+                        downloadPictureListener = this
                     )
                     nextFragmentCallback =
                         { role ->
@@ -120,5 +121,15 @@ class MainActivity : AppCompatActivity(), PostToastListener,
             getString(id),
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    override fun downloadPicture(uri: Uri) {
+        val path = uri.lastPathSegment?.replace(":", "/")
+        val request = DownloadManager.Request(uri)
+            .setTitle(path)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, path)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        (this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager)
+            .enqueue(request)
     }
 }

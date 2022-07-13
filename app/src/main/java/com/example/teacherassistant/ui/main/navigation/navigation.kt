@@ -1,17 +1,13 @@
 package com.example.teacherassistant.ui.main.navigation
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.teacherassistant.common.Constants
-import com.example.teacherassistant.common.PostToastListener
-import com.example.teacherassistant.common.Screen
-import com.example.teacherassistant.common.SignInListener
+import com.example.teacherassistant.common.*
 import com.example.teacherassistant.ui.main.entryScreen.EntryImage
 import com.example.teacherassistant.ui.main.mainScreen.MainScreen
 import com.example.teacherassistant.ui.main.notesScreen.NotesScreen
@@ -26,7 +22,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 fun NavGraph(
     navController: NavHostController,
     postToastListener: PostToastListener,
-    signInListener: SignInListener
+    signInListener: SignInListener,
+    downloadPictureListener: DownloadPictureListener
 ) {
     NavHost(
         navController = navController,
@@ -92,7 +89,8 @@ fun NavGraph(
                     "?${Constants.URI}={${Constants.URI}}"
         ) {
             PictureScreen(
-                uri = Uri.parse(it.arguments?.getString(Constants.URI))
+                uri = Uri.parse(it.arguments?.getString(Constants.URI)),
+                downloadPictureListener = downloadPictureListener
             )
         }
     }

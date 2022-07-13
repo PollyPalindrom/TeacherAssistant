@@ -1,22 +1,19 @@
 package com.example.teacherassistant.ui.main.pictureScreen
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.teacherassistant.domain.use_cases.DownloadPictureUseCase
+import com.example.teacherassistant.common.DownloadPictureListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
-import javax.inject.Inject
 
 @HiltViewModel
-class PictureViewModel @Inject constructor(private val downloadPictureUseCase: DownloadPictureUseCase) :
-    ViewModel() {
+class PictureViewModel : ViewModel() {
 
-    fun downloadPicture(imageName: String) {
+    fun downloadPicture(downloadPictureListener: DownloadPictureListener, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            val destFile = File.createTempFile(imageName, ".jpg")
-            downloadPictureUseCase.getFileDownloadTask(imageName, destFile)
+            downloadPictureListener.downloadPicture(uri)
         }
     }
 

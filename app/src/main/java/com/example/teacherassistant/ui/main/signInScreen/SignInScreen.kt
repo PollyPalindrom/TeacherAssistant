@@ -19,7 +19,7 @@ fun SignInScreen(
 ) {
 
     Scaffold(topBar = { CustomTopBar() }, modifier = Modifier.fillMaxSize()) {
-        ConstraintLayout {
+        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (teacherButton, text, studentButton) = createRefs()
             Text(
                 stringResource(R.string.choose_role_message),

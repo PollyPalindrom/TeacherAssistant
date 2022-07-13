@@ -1,6 +1,5 @@
 package com.example.teacherassistant.domain.use_cases
 
-import android.net.Uri
 import com.example.teacherassistant.data.repository.Repository
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
