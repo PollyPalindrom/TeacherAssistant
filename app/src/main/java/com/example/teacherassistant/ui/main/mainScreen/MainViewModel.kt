@@ -64,11 +64,14 @@ class MainViewModel @Inject constructor(
     ) {
         val groups = mutableListOf<Group>()
         for (group in value) {
+            var edit = false
+            if (group.data[Constants.TEACHER_ID] == getUserUid()) edit = true
             groups.add(
                 Group(
                     group.data[Constants.NAME].toString(),
                     group.data[Constants.TITLE].toString(),
-                    group.id
+                    group.id,
+                    edit
                 )
             )
         }

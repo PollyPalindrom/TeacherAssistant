@@ -40,7 +40,6 @@ fun MainScreen(
     listener: PostToastListener,
     role: String?
 ) {
-
     val state = viewModel.groupsListOpen.value
     val scaffoldState = rememberScaffoldState()
     var groupDialog by rememberSaveable { mutableStateOf(false) }
@@ -95,7 +94,7 @@ fun MainScreen(
                         navigateToNotes = {
                             navController.navigate(
                                 Screen.NotesScreen.route +
-                                        "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
+                                        "?${Constants.ROLE}=${if (group.edit) Constants.TEACHER else Constants.STUDENT}&${Constants.GROUP_ID}=${group.id}"
                             )
                         },
                         navigateToStudentsList = {
@@ -103,8 +102,7 @@ fun MainScreen(
                                 Screen.StudentsListScreen.route +
                                         "?${Constants.ROLE}=$role&${Constants.GROUP_ID}=${group.id}"
                             )
-                        },
-                        role = role
+                        }
                     )
                 }
             }
@@ -135,7 +133,6 @@ fun GroupItem(
     addStudent: (text: String, group: Group) -> Unit,
     deleteGroup: (group: Group) -> Unit,
     postToast: (id: Int) -> Unit,
-    role: String,
     navigateToNotes: () -> Unit,
     navigateToStudentsList: () -> Unit
 ) {
@@ -179,7 +176,7 @@ fun GroupItem(
                 openStudentList = { navigateToStudentsList() },
                 deleteGroup = { deleteGroup(group) },
                 openEmailDialog = { emailDialog = !emailDialog },
-                role = role
+                group = group
             )
         }
     }
@@ -203,9 +200,9 @@ fun Buttons(
     openStudentList: () -> Unit,
     deleteGroup: () -> Unit,
     openEmailDialog: () -> Unit,
-    role: String
+    group: Group
 ) {
-    if (role == Constants.TEACHER) {
+    if (group.edit) {
         IconButton(
             onClick = { openEmailDialog() },
             modifier = Modifier.background(MaterialTheme.colors.primary)
