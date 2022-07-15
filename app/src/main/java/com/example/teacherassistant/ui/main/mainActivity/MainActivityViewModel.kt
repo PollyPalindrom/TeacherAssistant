@@ -46,7 +46,7 @@ class MainActivityViewModel @Inject constructor(
         collectionFirstPath: String,
         status: String,
         postToastListener: PostToastListener,
-        saveUserInfo:()->Unit
+        saveUserInfo:(realRole:String)->Unit
     ) {
         checkRoleManager.checkRole(
             openNextFragment,

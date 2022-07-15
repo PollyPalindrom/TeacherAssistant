@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     Constants.COLLECTION_FIRST_PATH,
                     status,
                     this
-                ){
-                    saveUserInfo()
+                ){realStatus->
+                    saveUserInfo(realStatus)
                 }
             } else {
                 Toast.makeText(
@@ -113,13 +113,13 @@ class MainActivity : AppCompatActivity(), PostToastListener,
         }
     }
 
-    private fun saveUserInfo(){
+    private fun saveUserInfo(role:String){
         val userInfo = viewModel.getMapUserInfo()
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             userInfo[Constants.TOKEN] = token
-            if (status == Constants.TEACHER) userInfo[Constants.STATUS] =
+            if (role == Constants.TEACHER) userInfo[Constants.STATUS] =
                 Constants.POSITIVE_STAT
-            if (status == Constants.STUDENT) userInfo[Constants.STATUS] =
+            if (role == Constants.STUDENT) userInfo[Constants.STATUS] =
                 Constants.NEGATIVE_STAT
             viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
         }
