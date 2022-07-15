@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.CheckRoleManager
 import com.example.teacherassistant.common.Constants
+import com.example.teacherassistant.common.PostToastListener
 import com.example.teacherassistant.domain.use_cases.GetAuthResultForSignInUseCase
 import com.example.teacherassistant.domain.use_cases.GetDocumentReferenceForUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
@@ -40,10 +41,19 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun checkRole(openNextFragment: (role: String) -> Unit, collectionFirstPath: String) {
+    fun checkRole(
+        openNextFragment: (role: String) -> Unit,
+        collectionFirstPath: String,
+        status: String,
+        postToastListener: PostToastListener,
+        saveUserInfo:()->Unit
+    ) {
         checkRoleManager.checkRole(
             openNextFragment,
-            getDocumentReferenceForUserInfo(collectionFirstPath)
+            getDocumentReferenceForUserInfo(collectionFirstPath),
+            status,
+            postToastListener,
+            saveUserInfo
         )
     }
 

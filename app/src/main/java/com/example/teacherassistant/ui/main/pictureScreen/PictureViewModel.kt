@@ -7,9 +7,10 @@ import com.example.teacherassistant.common.DownloadPictureListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class PictureViewModel : ViewModel() {
+class PictureViewModel @Inject constructor(): ViewModel() {
 
     fun downloadPicture(downloadPictureListener: DownloadPictureListener, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {

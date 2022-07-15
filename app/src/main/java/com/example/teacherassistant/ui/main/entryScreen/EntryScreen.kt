@@ -25,7 +25,7 @@ import com.example.teacherassistant.common.Screen
 @Composable
 fun EntryImage(
     viewModel: EntryScreenViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
 ) {
 
     val nextFragmentCallback =

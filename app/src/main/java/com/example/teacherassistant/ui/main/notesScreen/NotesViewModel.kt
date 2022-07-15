@@ -97,16 +97,16 @@ class NotesViewModel @Inject constructor(
         collectionForthPath: String,
         setUris: (urisList: List<Uri>) -> Unit
     ) {
-        val uris = mutableListOf<Uri>()
-        getUserUid()?.let {
+//        val uris = mutableListOf<Uri>()
+        getUserUid()?.let { userUid ->
             getPictureInfoUseCase.getCollectionReferenceForPictures(
                 collectionFirstPath,
-                it, collectionSecondPath, groupId, collectionThirdPath, noteId, collectionForthPath
+                userUid, collectionSecondPath, groupId, collectionThirdPath, noteId, collectionForthPath
             ).get().addOnSuccessListener { pictures ->
-                for (picture in pictures) {
-                    uris.add(Uri.parse(picture.id.replace("|", "/")))
-                }
-                setUris(uris)
+//                for (picture in pictures) {
+//                    uris.add(Uri.parse(picture.id.replace("|", "/")))
+//                }
+                setUris(pictures.map { Uri.parse(it.id.replace("|","/")) })
             }
         }
     }

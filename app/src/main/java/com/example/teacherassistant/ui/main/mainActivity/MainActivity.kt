@@ -95,15 +95,13 @@ class MainActivity : AppCompatActivity(), PostToastListener,
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         viewModel.getAuthResult(credential).addOnCompleteListener {
             if (it.isSuccessful) {
-                viewModel.checkRole(nextFragmentCallback, Constants.COLLECTION_FIRST_PATH)
-                val userInfo = viewModel.getMapUserInfo()
-                FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-                    userInfo[Constants.TOKEN] = token
-                    if (status == Constants.TEACHER) userInfo[Constants.STATUS] =
-                        Constants.POSITIVE_STAT
-                    if (status == Constants.STUDENT) userInfo[Constants.STATUS] =
-                        Constants.NEGATIVE_STAT
-                    viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
+                viewModel.checkRole(
+                    nextFragmentCallback,
+                    Constants.COLLECTION_FIRST_PATH,
+                    status,
+                    this
+                ){
+                    saveUserInfo()
                 }
             } else {
                 Toast.makeText(
@@ -115,6 +113,17 @@ class MainActivity : AppCompatActivity(), PostToastListener,
         }
     }
 
+    private fun saveUserInfo(){
+        val userInfo = viewModel.getMapUserInfo()
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            userInfo[Constants.TOKEN] = token
+            if (status == Constants.TEACHER) userInfo[Constants.STATUS] =
+                Constants.POSITIVE_STAT
+            if (status == Constants.STUDENT) userInfo[Constants.STATUS] =
+                Constants.NEGATIVE_STAT
+            viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
+        }
+    }
     override fun postToast(id: Int) {
         Toast.makeText(
             this,
