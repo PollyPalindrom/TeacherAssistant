@@ -38,6 +38,10 @@ class Constants {
         const val PICTURE_URI = "Picture Uri"
         const val DOWNLOAD_PICTURE_PATH = "TeacherAssistant/"
         const val URI = "Uri"
+        const val COMMENT = "Comment"
+        const val TIME ="Time"
+        const val COLLECTION_FORTH_PATH_COMMENTS = "Comments"
+        const val NOTE_ID = "NoteId"
 
     }
 }

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.teacherassistant.common.*
+import com.example.teacherassistant.ui.main.commentScreen.CommentScreen
 import com.example.teacherassistant.ui.main.entryScreen.EntryImage
 import com.example.teacherassistant.ui.main.mainScreen.MainScreen
 import com.example.teacherassistant.ui.main.notesScreen.NotesScreen
@@ -92,6 +93,12 @@ fun NavGraph(
                 uri = Uri.parse(it.arguments?.getString(Constants.URI)),
                 downloadPictureListener = downloadPictureListener
             )
+        }
+        composable(
+            route = Screen.CommentsScreen.route +
+                    "?${Constants.NOTE_ID}={${Constants.NOTE_ID}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}"
+        ) {
+            CommentScreen(groupId = it.arguments?.getString(Constants.GROUP_ID), noteId = it.arguments?.getString(Constants.NOTE_ID))
         }
     }
 }
