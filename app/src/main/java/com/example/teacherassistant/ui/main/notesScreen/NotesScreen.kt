@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Message
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -68,15 +69,16 @@ fun NotesScreen(
             if (state != null) {
                 items(state.notes) { note ->
                     if (role != null && groupId != null) {
-                        NoteItem(note, role, deleteNote = {
-                            viewModel.deleteNote(
-                                Constants.COLLECTION_FIRST_PATH,
-                                Constants.COLLECTION_SECOND_PATH,
-                                Constants.COLLECTION_THIRD_PATH,
-                                note,
-                                groupId
-                            )
-                        },
+                        NoteItem(
+                            note, role, deleteNote = {
+                                viewModel.deleteNote(
+                                    Constants.COLLECTION_FIRST_PATH,
+                                    Constants.COLLECTION_SECOND_PATH,
+                                    Constants.COLLECTION_THIRD_PATH,
+                                    note,
+                                    groupId
+                                )
+                            },
                             getUris = { setUris ->
                                 viewModel.getUrisList(
                                     Constants.COLLECTION_FIRST_PATH,
@@ -93,7 +95,14 @@ fun NotesScreen(
                                     Screen.PictureScreen.route +
                                             "?${Constants.URI}=${Uri.encode(uri.toString())}"
                                 )
-                            })
+                            },
+                            openCommentScreen = { noteId ->
+                                navHostController.navigate(
+                                    Screen.CommentsScreen.route +
+                                            "?${Constants.NOTE_ID}=${noteId}&${Constants.GROUP_ID}=$groupId"
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -130,7 +139,8 @@ fun NoteItem(
     role: String,
     deleteNote: (note: Note) -> Unit,
     getUris: (setUris: (List<Uri>) -> Unit) -> Unit,
-    openPictureScreen: (uri: Uri) -> Unit
+    openPictureScreen: (uri: Uri) -> Unit,
+    openCommentScreen: (noteId: String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var pictures by rememberSaveable { mutableStateOf(listOf<Uri>()) }
@@ -177,9 +187,14 @@ fun NoteItem(
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_delete_24),
-                        contentDescription = stringResource(id = R.string.open_student_list_button_description)
+                        contentDescription = stringResource(id = R.string.delete_note_button)
                     )
                 }
+            }
+            IconButton(onClick = {
+                openCommentScreen(note.id)
+            }) {
+                Icon(Icons.Default.Message, contentDescription = null)
             }
             IconButton(onClick = {
                 expanded = !expanded

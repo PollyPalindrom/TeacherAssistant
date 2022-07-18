@@ -50,4 +50,5 @@
     <string name="user_already_has_another_role_error"> You already have account with another role</string>
     <string name="api_problems">Api problems. Probably don\'t have google services</string>
     <string name="comment">comment</string>
+    <string name="delete_note_button">Delete note</string>
 </resources>
