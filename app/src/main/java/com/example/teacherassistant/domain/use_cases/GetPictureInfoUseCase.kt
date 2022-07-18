@@ -15,7 +15,7 @@ class GetPictureInfoUseCase @Inject constructor(private val repository: Reposito
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String
-    ): CollectionReference = repository.getCollectionReferenceForPictures(
+    ): CollectionReference = repository.getCollectionReferenceForPicturesComments(
         collectionFirstPath,
         uid,
         collectionSecondPath,
@@ -34,7 +34,7 @@ class GetPictureInfoUseCase @Inject constructor(private val repository: Reposito
         noteId: String,
         collectionForthPath: String,
         pictureUri: String
-    ): DocumentReference = repository.getDocumentReferenceForPictures(
+    ): DocumentReference = repository.getDocumentReferenceForPicturesComments(
         collectionFirstPath,
         uid,
         collectionSecondPath,

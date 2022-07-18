@@ -15,7 +15,7 @@ class GetNoteInfoUseCase @Inject constructor(private val repository: Repository)
         collectionThirdPath: String,
         noteId: String
     ): DocumentReference {
-        return repository.getDocumentReferenceForNoteInfo(
+        return repository.getDocumentReferenceForNoteStudentsInfo(
             collectionFirstPath,
             uid,
             collectionSecondPath,
@@ -32,7 +32,7 @@ class GetNoteInfoUseCase @Inject constructor(private val repository: Repository)
         groupId: String,
         collectionThirdPath: String
     ): CollectionReference {
-        return repository.getCollectionReferenceForNoteInfo(
+        return repository.getCollectionReferenceForNoteStudentsInfo(
             collectionFirstPath,
             uid,
             collectionSecondPath,

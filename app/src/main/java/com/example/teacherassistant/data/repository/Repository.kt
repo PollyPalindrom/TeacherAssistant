@@ -27,96 +27,76 @@ class Repository @Inject constructor(
     private val messageApi: MessageApi
 ) : AuthenticationRepository, DataSourceRepository, ImageRepository, MessageRepository {
 
-    override fun getCurrentUserFullName(): String? {
-        return firebaseAuth.currentUser?.displayName
-    }
+    override fun getCurrentUserFullName(): String? = firebaseAuth.currentUser?.displayName
 
-    override fun getCurrentUserEmail(): String? {
-        return firebaseAuth.currentUser?.email
-    }
+    override fun getCurrentUserEmail(): String? = firebaseAuth.currentUser?.email
 
-    override fun getCurrentUserUid(): String? {
-        return firebaseAuth.currentUser?.uid
-    }
+    override fun getCurrentUserUid(): String? = firebaseAuth.currentUser?.uid
 
-    override fun getCurrentState(): Boolean {
-        return firebaseAuth.currentUser != null
-    }
+    override fun getCurrentState(): Boolean = firebaseAuth.currentUser != null
 
     override fun getDocumentReferenceForUserInfo(
         collectionPath: String,
         uid: String
-    ): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForUserInfo(collectionPath, uid)
-    }
+    ): DocumentReference = remoteDataSource.getDocumentReferenceForUserInfo(collectionPath, uid)
 
-    override fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference {
-        return remoteDataSource.getCollectionReferenceForUserInfo(collectionPath)
-    }
+    override fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference =
+        remoteDataSource.getCollectionReferenceForUserInfo(collectionPath)
 
-    override fun getAuthResultForSignIn(credential: AuthCredential): Task<AuthResult> {
-        return firebaseAuth.signInWithCredential(credential)
-    }
+    override fun getAuthResultForSignIn(credential: AuthCredential): Task<AuthResult> =
+        firebaseAuth.signInWithCredential(credential)
 
     override fun getDocumentReferenceForGroupInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
-        groupId: String
-    ): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId
-        )
-    }
+        id: String
+    ): DocumentReference = remoteDataSource.getDocumentReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        id
+    )
 
     override fun getCollectionReferenceForGroupInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String
-    ): CollectionReference {
-        return remoteDataSource.getCollectionReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath
-        )
-    }
+    ): CollectionReference = remoteDataSource.getCollectionReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath
+    )
 
-    override fun getDocumentReferenceForNoteInfo(
+    override fun getDocumentReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-        noteId: String
-    ): DocumentReference {
-        return remoteDataSource.getDocumentReferenceForNoteInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId,
-            collectionThirdPath,
-            noteId
-        )
-    }
+        id: String
+    ): DocumentReference = remoteDataSource.getDocumentReferenceForNoteStudentsInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath,
+        id
+    )
 
-    override fun getCollectionReferenceForNoteInfo(
+    override fun getCollectionReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-    ): CollectionReference {
-        return remoteDataSource.getCollectionReferenceForNoteInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId,
-            collectionThirdPath
-        )
-    }
+    ): CollectionReference = remoteDataSource.getCollectionReferenceForNoteStudentsInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath
+    )
 
     override suspend fun postNotification(notification: PushNotification): Response<ResponseBody> =
         messageApi.postNotification(notification)
@@ -128,7 +108,7 @@ class Repository @Inject constructor(
     override fun getResultUriTask(imageName: String): Task<Uri> =
         storageReference.child(imageName).downloadUrl
 
-    override fun getCollectionReferenceForPictures(
+    override fun getCollectionReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -136,7 +116,7 @@ class Repository @Inject constructor(
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String
-    ): CollectionReference = remoteDataSource.getCollectionReferenceForPictures(
+    ): CollectionReference = remoteDataSource.getCollectionReferenceForPicturesComments(
         collectionFirstPath,
         uid,
         collectionSecondPath,
@@ -146,7 +126,7 @@ class Repository @Inject constructor(
         collectionForthPath
     )
 
-    override fun getDocumentReferenceForPictures(
+    override fun getDocumentReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -154,8 +134,8 @@ class Repository @Inject constructor(
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String,
-        pictureUri: String
-    ): DocumentReference = remoteDataSource.getDocumentReferenceForPictures(
+        id: String
+    ): DocumentReference = remoteDataSource.getDocumentReferenceForPicturesComments(
         collectionFirstPath,
         uid,
         collectionSecondPath,
@@ -163,6 +143,6 @@ class Repository @Inject constructor(
         collectionThirdPath,
         noteId,
         collectionForthPath,
-        pictureUri
+        id
     )
 }

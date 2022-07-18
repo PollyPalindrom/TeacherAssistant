@@ -12,58 +12,59 @@ class RemoteDataSourceImpl @Inject constructor(
     override fun getDocumentReferenceForUserInfo(
         collectionPath: String,
         uid: String
-    ): DocumentReference {
-        return firestore.collection(collectionPath).document(uid)
-    }
+    ): DocumentReference = firestore.collection(collectionPath).document(uid)
 
-    override fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference {
-        return firestore.collection(collectionPath)
-    }
+    override fun getCollectionReferenceForUserInfo(collectionPath: String): CollectionReference =
+        firestore.collection(collectionPath)
 
     override fun getDocumentReferenceForGroupInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String
-    ): DocumentReference {
-        return firestore.collection(collectionFirstPath).document(uid)
-            .collection(collectionSecondPath).document(groupId)
-    }
+    ): DocumentReference = getCollectionReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath
+    ).document(groupId)
 
     override fun getCollectionReferenceForGroupInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String
-    ): CollectionReference {
-        return firestore.collection(collectionFirstPath).document(uid)
-            .collection(collectionSecondPath)
-    }
+    ): CollectionReference = getDocumentReferenceForUserInfo(collectionFirstPath, uid)
+        .collection(collectionSecondPath)
 
-    override fun getDocumentReferenceForNoteInfo(
+    override fun getDocumentReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-        noteId: String
-    ): DocumentReference {
-        return firestore.collection(collectionFirstPath).document(uid)
-            .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
-            .document(noteId)
-    }
+        id: String
+    ): DocumentReference = getCollectionReferenceForNoteStudentsInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath
+    )
+        .document(id)
 
-    override fun getCollectionReferenceForNoteInfo(
+    override fun getCollectionReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-    ): CollectionReference {
-        return firestore.collection(collectionFirstPath).document(uid)
-            .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
-    }
+    ): CollectionReference = getDocumentReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId
+    ).collection(collectionThirdPath)
 
-    override fun getCollectionReferenceForPictures(
+    override fun getCollectionReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -71,11 +72,16 @@ class RemoteDataSourceImpl @Inject constructor(
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String
-    ): CollectionReference = firestore.collection(collectionFirstPath).document(uid)
-        .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
-        .document(noteId).collection(collectionForthPath)
+    ): CollectionReference = getDocumentReferenceForNoteStudentsInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath,
+        noteId
+    ).collection(collectionForthPath)
 
-    override fun getDocumentReferenceForPictures(
+    override fun getDocumentReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -83,8 +89,14 @@ class RemoteDataSourceImpl @Inject constructor(
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String,
-        pictureUri: String
-    ): DocumentReference = firestore.collection(collectionFirstPath).document(uid)
-        .collection(collectionSecondPath).document(groupId).collection(collectionThirdPath)
-        .document(noteId).collection(collectionForthPath).document(pictureUri)
+        id: String
+    ): DocumentReference = getCollectionReferenceForPicturesComments(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId,
+        collectionThirdPath,
+        noteId,
+        collectionForthPath
+    ).document(id)
 }
