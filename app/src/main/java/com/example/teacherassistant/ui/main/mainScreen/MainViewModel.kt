@@ -19,7 +19,7 @@ class MainViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getGroupInfoUseCase: GetGroupInfoUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getNoteInfoUseCase: GetNoteInfoUseCase,
+    private val getNoteInfoUseCase: GetNoteStudentsInfoUseCase,
     private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase,
     private val getDocumentReferenceForUserInfoUseCase: GetDocumentReferenceForUserInfoUseCase
 ) :
@@ -48,7 +48,7 @@ class MainViewModel @Inject constructor(
             groupInfo[Constants.TITLE] = title
             groupInfo[Constants.TEACHER_ID] = getUserUid().toString()
             getUserUid()?.let { it1 ->
-                getGroupInfoUseCase.getDocument(
+                getGroupInfoUseCase.getDocumentReference(
                     collectionFirstPath,
                     it1,
                     collectionSecondPath,
@@ -84,7 +84,7 @@ class MainViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             getUserUid()?.let { uid ->
-                getGroupInfoUseCase.getCollection(
+                getGroupInfoUseCase.getCollectionReference(
                     collectionFirstPath,
                     uid,
                     collectionSecondPath
@@ -154,7 +154,7 @@ class MainViewModel @Inject constructor(
                 .addOnSuccessListener { users ->
                     for (user in users) {
                         if (user.data[Constants.EMAIL].toString() == email) {
-                            getGroupInfoUseCase.getCollection(
+                            getGroupInfoUseCase.getCollectionReference(
                                 collectionFirstPath,
                                 user.id,
                                 collectionSecondPath
@@ -163,7 +163,7 @@ class MainViewModel @Inject constructor(
                                 groupInfo[Constants.NAME] = name
                                 groupInfo[Constants.TITLE] = title
                                 groupInfo[Constants.TEACHER_ID] = getUserUid().toString()
-                                getGroupInfoUseCase.getDocument(
+                                getGroupInfoUseCase.getDocumentReference(
                                     collectionFirstPath,
                                     user.id,
                                     collectionSecondPath,
@@ -207,7 +207,7 @@ class MainViewModel @Inject constructor(
                 .get().addOnSuccessListener { usersDocuments ->
                     for (user in usersDocuments) {
                         val dr =
-                            getDocumentReferenceForUserInfoUseCase.getDocumentReferenceForUserInfo(
+                            getDocumentReferenceForUserInfoUseCase.getDocumentReference(
                                 collectionFirstPath,
                                 user.id
                             )
@@ -243,7 +243,7 @@ class MainViewModel @Inject constructor(
                     dr.set(studentInfo)
                 }
                 if (it.getString(Constants.STATUS) == Constants.POSITIVE_STAT) {
-                    getGroupInfoUseCase.getCollection(
+                    getGroupInfoUseCase.getCollectionReference(
                         collectionFirstPath,
                         user.id,
                         collectionSecondPath
@@ -307,7 +307,7 @@ class MainViewModel @Inject constructor(
         group: Group
     ) {
         getUserUid()?.let {
-            getGroupInfoUseCase.getDocument(
+            getGroupInfoUseCase.getDocumentReference(
                 collectionFirstPath,
                 it, collectionSecondPath, group.id
             ).delete().addOnSuccessListener {
@@ -338,7 +338,7 @@ class MainViewModel @Inject constructor(
                     ).get().addOnSuccessListener { users ->
                         for (user in users) {
                             if (user.data[Constants.EMAIL] == student.id) {
-                                getGroupInfoUseCase.getDocument(
+                                getGroupInfoUseCase.getDocumentReference(
                                     collectionFirstPath,
                                     user.id,
                                     collectionSecondPath,

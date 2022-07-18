@@ -5,7 +5,6 @@ import com.google.firebase.firestore.DocumentReference
 import javax.inject.Inject
 
 class GetDocumentReferenceForUserInfoUseCase @Inject constructor(private val repository: Repository) {
-    fun getDocumentReferenceForUserInfo(collectionPath: String, uid: String): DocumentReference {
-        return repository.getDocumentReferenceForUserInfo(collectionPath, uid)
-    }
+    fun getDocumentReference(collectionPath: String, uid: String): DocumentReference =
+        repository.getDocumentReferenceForUserInfo(collectionPath, uid)
 }

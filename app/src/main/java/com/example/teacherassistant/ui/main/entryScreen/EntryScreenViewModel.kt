@@ -29,7 +29,7 @@ class EntryScreenViewModel @Inject constructor(
         checkRoleManager.checkRole(
             openNextFragment,
             getUserUid()?.let {
-                getDocumentReferenceForUserInfoUseCase.getDocumentReferenceForUserInfo(
+                getDocumentReferenceForUserInfoUseCase.getDocumentReference(
                     collectionFirstPath, it
                 )
             }

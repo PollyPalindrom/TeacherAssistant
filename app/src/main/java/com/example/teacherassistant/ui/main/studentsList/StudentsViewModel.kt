@@ -5,14 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.teacherassistant.common.Constants
 import com.example.teacherassistant.domain.use_cases.GetGroupInfoUseCase
-import com.example.teacherassistant.domain.use_cases.GetNoteInfoUseCase
+import com.example.teacherassistant.domain.use_cases.GetNoteStudentsInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class StudentsViewModel @Inject constructor(
-    private val getNoteInfoUseCase: GetNoteInfoUseCase,
+    private val getNoteInfoUseCase: GetNoteStudentsInfoUseCase,
     private val getUserUidUseCase: GetUserUidUseCase,
     private val getGroupInfoUseCase: GetGroupInfoUseCase
 ) :
@@ -34,7 +34,7 @@ class StudentsViewModel @Inject constructor(
     ) {
         if (role == Constants.STUDENT) {
             getUserUid()?.let {
-                getGroupInfoUseCase.getDocument(
+                getGroupInfoUseCase.getDocumentReference(
                     collectionFirstPath,
                     it,
                     collectionSecondPath,

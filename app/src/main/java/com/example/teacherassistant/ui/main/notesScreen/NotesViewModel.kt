@@ -19,11 +19,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     private val getUserUidUseCase: GetUserUidUseCase,
-    private val getNoteInfoUseCase: GetNoteInfoUseCase,
+    private val getNoteInfoUseCase: GetNoteStudentsInfoUseCase,
     private val postNotificationUseCase: PostNotificationUseCase,
     private val getCollectionReferenceForUserInfoUseCase: GetCollectionReferenceForUserInfoUseCase,
     private val uploadPictureUseCase: UploadPictureUseCase,
-    private val getPictureInfoUseCase: GetPictureInfoUseCase
+    private val getPictureInfoUseCase: GetPictureCommentInfoUseCase
 ) : ViewModel() {
 
     private val noteList = mutableStateOf(NotesState())
@@ -99,7 +99,7 @@ class NotesViewModel @Inject constructor(
     ) {
 //        val uris = mutableListOf<Uri>()
         getUserUid()?.let { userUid ->
-            getPictureInfoUseCase.getCollectionReferenceForPictures(
+            getPictureInfoUseCase.getCollectionReference(
                 collectionFirstPath,
                 userUid, collectionSecondPath, groupId, collectionThirdPath, noteId, collectionForthPath
             ).get().addOnSuccessListener { pictures ->
@@ -143,7 +143,7 @@ class NotesViewModel @Inject constructor(
                             pictureInfo[Constants.PICTURE_URI] =
                                 resultUri.result.toString().replace("/", "|")
                             getUserUid()?.let { it1 ->
-                                getPictureInfoUseCase.getDocumentReferenceForPictures(
+                                getPictureInfoUseCase.getDocumentReference(
                                     collectionFirstPath,
                                     it1,
                                     collectionSecondPath,
@@ -200,7 +200,7 @@ class NotesViewModel @Inject constructor(
                                         collectionThirdPath,
                                         groupId + noteInfo[Constants.TITLE]
                                     ).set(noteInfo)
-                                    getPictureInfoUseCase.getCollectionReferenceForPictures(
+                                    getPictureInfoUseCase.getCollectionReference(
                                         collectionFirstPath,
                                         it,
                                         collectionSecondPath,
@@ -212,7 +212,7 @@ class NotesViewModel @Inject constructor(
                                         for (picture in pictures) {
                                             val pictureInfo = mutableMapOf<String, String>()
                                             pictureInfo[Constants.PICTURE_URI] = picture.id
-                                            getPictureInfoUseCase.getDocumentReferenceForPictures(
+                                            getPictureInfoUseCase.getDocumentReference(
                                                 collectionFirstPath,
                                                 user.id,
                                                 collectionSecondPath,

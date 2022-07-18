@@ -34,7 +34,7 @@ class MainActivityViewModel @Inject constructor(
 
     private fun getDocumentReferenceForUserInfo(collectionPath: String): DocumentReference? {
         return getUserUid()?.let {
-            getDocumentReferenceForUserInfoUseCase.getDocumentReferenceForUserInfo(
+            getDocumentReferenceForUserInfoUseCase.getDocumentReference(
                 collectionPath,
                 it
             )

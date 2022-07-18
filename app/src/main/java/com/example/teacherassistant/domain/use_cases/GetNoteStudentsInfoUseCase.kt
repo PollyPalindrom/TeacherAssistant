@@ -5,43 +5,35 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import javax.inject.Inject
 
-class GetPictureInfoUseCase @Inject constructor(private val repository: Repository) {
+class GetNoteStudentsInfoUseCase @Inject constructor(private val repository: Repository) {
 
-    fun getCollectionReferenceForPictures(
+    fun getDocumentReference(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-        noteId: String,
-        collectionForthPath: String
-    ): CollectionReference = repository.getCollectionReferenceForPicturesComments(
+        id: String
+    ): DocumentReference = repository.getDocumentReferenceForNoteStudentsInfo(
         collectionFirstPath,
         uid,
         collectionSecondPath,
         groupId,
         collectionThirdPath,
-        noteId,
-        collectionForthPath
+        id
     )
 
-    fun getDocumentReferenceForPictures(
+    fun getCollectionReference(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
-        collectionThirdPath: String,
-        noteId: String,
-        collectionForthPath: String,
-        pictureUri: String
-    ): DocumentReference = repository.getDocumentReferenceForPicturesComments(
+        collectionThirdPath: String
+    ): CollectionReference = repository.getCollectionReferenceForNoteStudentsInfo(
         collectionFirstPath,
         uid,
         collectionSecondPath,
         groupId,
-        collectionThirdPath,
-        noteId,
-        collectionForthPath,
-        pictureUri
+        collectionThirdPath
     )
 }

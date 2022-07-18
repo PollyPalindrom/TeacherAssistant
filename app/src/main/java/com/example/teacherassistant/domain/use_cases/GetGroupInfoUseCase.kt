@@ -6,29 +6,25 @@ import com.google.firebase.firestore.DocumentReference
 import javax.inject.Inject
 
 class GetGroupInfoUseCase @Inject constructor(private val repository: Repository) {
-    fun getCollection(
+    fun getCollectionReference(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String
-    ): CollectionReference {
-        return repository.getCollectionReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath
-        )
-    }
+    ): CollectionReference = repository.getCollectionReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath
+    )
 
-    fun getDocument(
+    fun getDocumentReference(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String
-    ): DocumentReference {
-        return repository.getDocumentReferenceForGroupInfo(
-            collectionFirstPath,
-            uid,
-            collectionSecondPath,
-            groupId
-        )
-    }
+    ): DocumentReference = repository.getDocumentReferenceForGroupInfo(
+        collectionFirstPath,
+        uid,
+        collectionSecondPath,
+        groupId
+    )
 }

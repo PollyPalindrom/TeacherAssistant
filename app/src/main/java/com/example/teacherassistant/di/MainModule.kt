@@ -67,14 +67,14 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideGetNoteInfoUseCase(repository: Repository): GetNoteInfoUseCase {
-        return GetNoteInfoUseCase(repository)
+    fun provideGetNoteInfoUseCase(repository: Repository): GetNoteStudentsInfoUseCase {
+        return GetNoteStudentsInfoUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetPictureInfoUseCase(repository: Repository): GetPictureInfoUseCase {
-        return GetPictureInfoUseCase(repository)
+    fun provideGetPictureInfoUseCase(repository: Repository): GetPictureCommentInfoUseCase {
+        return GetPictureCommentInfoUseCase(repository)
     }
 
     @Provides
