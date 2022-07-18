@@ -13,7 +13,7 @@ interface DataSourceRepository {
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
-        groupId: String
+        id: String
     ): DocumentReference
 
     fun getCollectionReferenceForGroupInfo(
@@ -22,16 +22,16 @@ interface DataSourceRepository {
         collectionSecondPath: String
     ): CollectionReference
 
-    fun getDocumentReferenceForNoteInfo(
+    fun getDocumentReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
         groupId: String,
         collectionThirdPath: String,
-        noteId: String
+        id: String
     ): DocumentReference
 
-    fun getCollectionReferenceForNoteInfo(
+    fun getCollectionReferenceForNoteStudentsInfo(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -39,7 +39,7 @@ interface DataSourceRepository {
         collectionThirdPath: String,
     ): CollectionReference
 
-    fun getCollectionReferenceForPictures(
+    fun getCollectionReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -49,7 +49,7 @@ interface DataSourceRepository {
         collectionForthPath: String
     ): CollectionReference
 
-    fun getDocumentReferenceForPictures(
+    fun getDocumentReferenceForPicturesComments(
         collectionFirstPath: String,
         uid: String,
         collectionSecondPath: String,
@@ -57,7 +57,7 @@ interface DataSourceRepository {
         collectionThirdPath: String,
         noteId: String,
         collectionForthPath: String,
-        pictureUri: String
+        id: String
     ): DocumentReference
 
 }
