@@ -44,7 +44,11 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                 account.idToken?.let { it1 -> firebaseAuth(it1) }
             }
         } catch (e: ApiException) {
-
+            Toast.makeText(
+                this,
+                getString(R.string.api_problems),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
     private val viewModel: MainActivityViewModel by viewModels()
@@ -86,9 +90,18 @@ class MainActivity : AppCompatActivity(), PostToastListener,
     }
 
     override fun signIn(status: String) {
-        this.status = status
-        val signInClient = getClient()
-        launcher.launch(signInClient.signInIntent)
+        try {
+            this.status = status
+            val signInClient = getClient()
+            launcher.launch(signInClient.signInIntent)
+        } catch (exception: ApiException) {
+            Toast.makeText(
+                this,
+                getString(R.string.api_problems),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
     }
 
     private fun firebaseAuth(idToken: String) {
@@ -100,7 +113,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
                     Constants.COLLECTION_FIRST_PATH,
                     status,
                     this
-                ){realStatus->
+                ) { realStatus ->
                     saveUserInfo(realStatus)
                 }
             } else {
@@ -113,7 +126,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
         }
     }
 
-    private fun saveUserInfo(role:String){
+    private fun saveUserInfo(role: String) {
         val userInfo = viewModel.getMapUserInfo()
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
             userInfo[Constants.TOKEN] = token
@@ -124,6 +137,7 @@ class MainActivity : AppCompatActivity(), PostToastListener,
             viewModel.setUserInfo(userInfo, Constants.COLLECTION_FIRST_PATH)
         }
     }
+
     override fun postToast(id: Int) {
         Toast.makeText(
             this,
