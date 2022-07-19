@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.teacherassistant.common.Constants
+import com.example.teacherassistant.domain.use_cases.GetGroupInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetPictureCommentInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserInfoUseCase
 import com.example.teacherassistant.domain.use_cases.GetUserUidUseCase
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class CommentViewModel @Inject constructor(
     private val getCommentInfoUseCase: GetPictureCommentInfoUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getUserUidUseCase: GetUserUidUseCase
+    private val getUserUidUseCase: GetUserUidUseCase,
+    private val getGroupInfoUseCase: GetGroupInfoUseCase
 ) :
     ViewModel() {
 
@@ -46,16 +48,25 @@ class CommentViewModel @Inject constructor(
         infoMap[Constants.TIME] = currentDate.toString()
         viewModelScope.launch(Dispatchers.IO) {
             getUserUidUseCase.getUserUid()?.let { uid ->
-                getCommentInfoUseCase.getDocumentReference(
+                getGroupInfoUseCase.getDocumentReference(
                     collectionFirstPath,
                     uid,
                     collectionSecondPath,
-                    groupId,
-                    collectionThirdPath,
-                    noteId,
-                    collectionForthPath,
-                    noteId + text
-                ).set(infoMap)
+                    groupId
+                ).get().addOnSuccessListener { groupInfo ->
+                    groupInfo?.data?.get(Constants.TEACHER_ID)?.let {
+                        getCommentInfoUseCase.getDocumentReference(
+                            collectionFirstPath,
+                            it.toString(),
+                            collectionSecondPath,
+                            groupId,
+                            collectionThirdPath,
+                            noteId,
+                            collectionForthPath,
+                            noteId + text
+                        ).set(infoMap)
+                    }
+                }
             }
         }
     }

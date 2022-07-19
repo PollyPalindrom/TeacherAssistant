@@ -8,11 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,7 +28,16 @@ fun CommentScreen(
     val state = viewModel.commentListOpen.value
     val scaffoldState = rememberScaffoldState()
     var comment by rememberSaveable { mutableStateOf("") }
-
+    LaunchedEffect(key1 = true) {
+        if (groupId != null && noteId != null) viewModel.subscribeComments(
+            Constants.COLLECTION_FIRST_PATH,
+            Constants.COLLECTION_SECOND_PATH,
+            groupId,
+            Constants.COLLECTION_THIRD_PATH,
+            noteId,
+            Constants.COLLECTION_FORTH_PATH_COMMENTS
+        )
+    }
     Scaffold(scaffoldState = scaffoldState, topBar = {
         CustomTopBar()
     }, bottomBar = {
