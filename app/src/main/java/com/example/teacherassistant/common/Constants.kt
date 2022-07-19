@@ -42,6 +42,8 @@ class Constants {
         const val TIME ="Time"
         const val COLLECTION_FORTH_PATH_COMMENTS = "Comments"
         const val NOTE_ID = "NoteId"
+        const val IS_REPLY = "IsReply"
+        const val ADDRESSEE = "Addressee"
 
     }
 }
