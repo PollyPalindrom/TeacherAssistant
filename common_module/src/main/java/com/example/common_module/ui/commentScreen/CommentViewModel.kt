@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.common_module.common.Constants
 import com.example.common_module.domain.use_cases.GetGroupInfoUseCase
 import com.example.common_module.domain.use_cases.GetPictureCommentInfoUseCase
 import com.example.common_module.domain.use_cases.GetUserInfoUseCase
@@ -40,14 +41,14 @@ class CommentViewModel @Inject constructor(
     ) {
         val infoMap = mutableMapOf<String, Any>()
         val userEmail = getUserInfoUseCase.getUserEmail()
-        infoMap[com.example.common_module.common.Constants.COMMENT] = text
-        if (userEmail != null) infoMap[com.example.common_module.common.Constants.EMAIL] = userEmail
+        infoMap[Constants.COMMENT] = text
+        if (userEmail != null) infoMap[Constants.EMAIL] = userEmail
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm")
         val currentDate = sdf.format(Date())
-        infoMap[com.example.common_module.common.Constants.TIME] = currentDate.toString()
-        infoMap[com.example.common_module.common.Constants.IS_REPLY] =
-            if (isReply) com.example.common_module.common.Constants.POSITIVE_STAT else com.example.common_module.common.Constants.NEGATIVE_STAT
-        infoMap[com.example.common_module.common.Constants.ADDRESSEE] = addressee
+        infoMap[Constants.TIME] = currentDate.toString()
+        infoMap[Constants.IS_REPLY] =
+            if (isReply) Constants.POSITIVE_STAT else Constants.NEGATIVE_STAT
+        infoMap[Constants.ADDRESSEE] = addressee
         viewModelScope.launch(Dispatchers.IO) {
             getUserUidUseCase.getUserUid()?.let { uid ->
                 getGroupInfoUseCase.getDocumentReference(
@@ -56,7 +57,7 @@ class CommentViewModel @Inject constructor(
                     collectionSecondPath,
                     groupId
                 ).get().addOnSuccessListener { groupInfo ->
-                    groupInfo?.data?.get(com.example.common_module.common.Constants.TEACHER_ID)
+                    groupInfo?.data?.get(Constants.TEACHER_ID)
                         ?.let {
                             getCommentInfoUseCase.getDocumentReference(
                                 collectionFirstPath,
@@ -90,11 +91,11 @@ class CommentViewModel @Inject constructor(
                     collectionSecondPath,
                     groupId
                 ).get().addOnSuccessListener { groupInfo ->
-                    groupInfo?.data?.get(com.example.common_module.common.Constants.TEACHER_ID)
-                        ?.let {
+                    groupInfo?.data?.get(Constants.TEACHER_ID)
+                        ?.let { teacherId ->
                             getCommentInfoUseCase.getCollectionReference(
                                 collectionFirstPath,
-                                it.toString(),
+                                teacherId.toString(),
                                 collectionSecondPath,
                                 groupId,
                                 collectionThirdPath,
@@ -105,20 +106,21 @@ class CommentViewModel @Inject constructor(
                                     val comments = mutableListOf<Comment>()
                                     for (comment in value) {
                                         comments.add(
-                                            if (comment.data[com.example.common_module.common.Constants.IS_REPLY] == com.example.common_module.common.Constants.NEGATIVE_STAT) Comment(
-                                                comment.data[com.example.common_module.common.Constants.TIME].toString(),
-                                                comment.data[com.example.common_module.common.Constants.COMMENT].toString(),
-                                                comment.data[com.example.common_module.common.Constants.EMAIL].toString()
+                                            if (comment.data[Constants.IS_REPLY] == Constants.NEGATIVE_STAT) Comment(
+                                                comment.data[Constants.TIME].toString(),
+                                                comment.data[Constants.COMMENT].toString(),
+                                                comment.data[Constants.EMAIL].toString()
                                             )
                                             else Comment(
-                                                comment.data[com.example.common_module.common.Constants.TIME].toString(),
-                                                comment.data[com.example.common_module.common.Constants.COMMENT].toString(),
-                                                comment.data[com.example.common_module.common.Constants.EMAIL].toString(),
+                                                comment.data[Constants.TIME].toString(),
+                                                comment.data[Constants.COMMENT].toString(),
+                                                comment.data[Constants.EMAIL].toString(),
                                                 true,
-                                                comment.data[com.example.common_module.common.Constants.ADDRESSEE].toString()
+                                                comment.data[Constants.ADDRESSEE].toString()
                                             )
                                         )
                                     }
+                                    comments.sortByDescending { it.time }
                                     commentList.value = CommentState(comments)
                                 } else if (error != null) {
                                     commentList.value = CommentState(error = error.localizedMessage)
