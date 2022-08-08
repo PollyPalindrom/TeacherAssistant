@@ -19,8 +19,8 @@
     <string name="teacher_assistant">Teacher assistant</string>
     <string name="add_new_group">Add new group</string>
     <string name="add_new_note">Add new note</string>
-    <string name="email">Email</string>
     <string name="add_new_student">Add new student</string>
+    <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="title">Title</string>
     <string name="text">Text</string>

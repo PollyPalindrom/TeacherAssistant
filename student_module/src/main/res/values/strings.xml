@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">common_module</string>
+    <string name="api_problems">Api problems. Probably don\'t have google services</string>
+    <string name="signInFailed">Sign In is failed </string>
+</resources>

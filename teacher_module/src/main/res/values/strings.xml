@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">teacher_module</string>
+    <string name="groupWindowMessage">Enter name and tittle of group</string>
+    <string name="emailWindowTitle">Students email</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="positiveButton">OK</string>
+    <string name="textErrorMessage">Wrong</string>
+    <string name="add_new_note">Add new note</string>
+    <string name="delete_note_button">Delete note</string>
+    <string name="noteWindowMessage">Enter title and text of note</string>
+    <string name="text">Text</string>
+    <string name="add_button_description">Add picture</string>
+    <string name="add_button_text">Add picture</string>
+    <string name="delete_group_button_description">Delete group</string>
+    <string name="add_new_student_email_button_description">Add new student</string>
+    <string name="add_new_group">Add new group</string>
+    <string name="api_problems">Api problems. Probably don\'t have google services</string>
+    <string name="signInFailed">Sign In is failed </string>
+</resources>

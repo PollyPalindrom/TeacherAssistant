@@ -14,3 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "TeacherAssistant"
 include ':app'
+include ':student_module'
+include ':teacher_module'
+include ':common_module'

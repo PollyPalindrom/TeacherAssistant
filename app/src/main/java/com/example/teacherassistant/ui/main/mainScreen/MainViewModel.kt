@@ -311,9 +311,6 @@ class MainViewModel @Inject constructor(
                 collectionFirstPath,
                 it, collectionSecondPath, group.id
             ).delete().addOnSuccessListener {
-                val newList = groupsList.value.groups as MutableList<Group>
-                newList.remove(group)
-                groupsList.value = GroupsState(newList)
                 deleteGroupFromStudents(collectionFirstPath, collectionSecondPath, group)
             }
         }
