@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Reply
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.common_module.R
+import com.example.common_module.common.Constants
 import com.example.common_module.ui.customTopBar.CustomTopBar
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -34,12 +36,12 @@ fun CommentScreen(
 
     LaunchedEffect(key1 = true) {
         if (groupId != null && noteId != null) viewModel.subscribeComments(
-            com.example.common_module.common.Constants.COLLECTION_FIRST_PATH,
-            com.example.common_module.common.Constants.COLLECTION_SECOND_PATH,
+            Constants.COLLECTION_FIRST_PATH,
+            Constants.COLLECTION_SECOND_PATH,
             groupId,
-            com.example.common_module.common.Constants.COLLECTION_THIRD_PATH,
+            Constants.COLLECTION_THIRD_PATH,
             noteId,
-            com.example.common_module.common.Constants.COLLECTION_FORTH_PATH_COMMENTS
+            Constants.COLLECTION_FORTH_PATH_COMMENTS
         )
     }
     Scaffold(scaffoldState = scaffoldState, topBar = {
@@ -47,7 +49,15 @@ fun CommentScreen(
     }, bottomBar = {
         Column {
             if (reply) {
-                Text("reply to $addressee")
+                Row {
+                    Text("reply to $addressee",modifier = Modifier.weight(1f))
+                    IconButton(onClick = {
+                        reply = false
+                        addressee = ""
+                    }) {
+                        Icon(Icons.Default.Close, contentDescription = null)
+                    }
+                }
             }
             Row {
                 TextField(
@@ -63,12 +73,12 @@ fun CommentScreen(
                 IconButton(onClick = {
                     if (noteId != null && groupId != null) {
                         viewModel.createComment(
-                            com.example.common_module.common.Constants.COLLECTION_FIRST_PATH,
-                            com.example.common_module.common.Constants.COLLECTION_SECOND_PATH,
+                            Constants.COLLECTION_FIRST_PATH,
+                            Constants.COLLECTION_SECOND_PATH,
                             groupId,
-                            com.example.common_module.common.Constants.COLLECTION_THIRD_PATH,
+                            Constants.COLLECTION_THIRD_PATH,
                             noteId,
-                            com.example.common_module.common.Constants.COLLECTION_FORTH_PATH_COMMENTS,
+                            Constants.COLLECTION_FORTH_PATH_COMMENTS,
                             comment,
                             reply,
                             addressee
