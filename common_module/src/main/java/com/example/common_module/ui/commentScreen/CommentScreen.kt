@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -110,17 +112,25 @@ fun CommentScreen(
 
 @Composable
 fun CommentItem(comment: Comment, reply: (email: String) -> Unit) {
-    Row {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = comment.time)
-            Text(comment.author + if (comment.isReply) " to ${comment.addressee}" else "")
-            Text(comment.text)
-        }
-        IconButton(onClick = { reply(comment.author) }) {
-            Icon(
-                Icons.Default.Reply,
-                contentDescription = null
-            )
+    Card(
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+        elevation = 4.dp,
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Row(modifier = Modifier.padding(10.dp)) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = comment.time)
+                Text(comment.author + if (comment.isReply) " to ${comment.addressee}" else "", color = colorResource(
+                    id = R.color.pink_900
+                ))
+                Text(comment.text)
+            }
+            IconButton(onClick = { reply(comment.author) }) {
+                Icon(
+                    Icons.Default.Reply,
+                    contentDescription = null
+                )
+            }
         }
     }
 }
