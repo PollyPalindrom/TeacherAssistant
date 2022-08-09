@@ -18,7 +18,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.common_module.common.Constants
 import com.example.common_module.common.Screen
@@ -53,7 +52,10 @@ fun StudentMainScreen(
             Constants.COLLECTION_SECOND_PATH
         )
     })
-    Scaffold(topBar = { CustomTopBar(navController = navController) }, scaffoldState = scaffoldState) {
+    Scaffold(
+        topBar = { CustomTopBar(navController = navController) },
+        scaffoldState = scaffoldState
+    ) {
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
             items(state.groups) { group ->
                 GroupItem(

@@ -5,9 +5,6 @@ import com.example.common_module.data.remote.MessageApi
 import com.example.common_module.data.remote.RemoteDataSource
 import com.example.common_module.data.remote.RemoteDataSourceImpl
 import com.example.common_module.data.repository.Repository
-import com.example.common_module.domain.use_cases.*
-import com.example.teacher_module.domain.use_cases.PostNotificationUseCase
-import com.example.teacher_module.domain.use_cases.UploadPictureUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

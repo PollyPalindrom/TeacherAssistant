@@ -19,7 +19,7 @@ import com.example.common_module.ui.studentsList.StudentItem
 fun StudentsListScreen(
     viewModel: StudentsViewModel,
     groupId: String?,
-    navController:NavHostController
+    navController: NavHostController
 ) {
     val state = viewModel.studentsListOpen.value
     val scaffoldState = rememberScaffoldState()
@@ -33,7 +33,10 @@ fun StudentsListScreen(
         )
     }
 
-    Scaffold(topBar = { CustomTopBar(navController = navController) }, scaffoldState = scaffoldState) {
+    Scaffold(
+        topBar = { CustomTopBar(navController = navController) },
+        scaffoldState = scaffoldState
+    ) {
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
             items(state.students) { student ->
                 StudentItem(student)

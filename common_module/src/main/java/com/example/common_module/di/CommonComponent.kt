@@ -9,7 +9,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(
-    modules = [CommonModule::class, CommonViewModelsModule::class],
+    modules = [CommonViewModelsModule::class],
     dependencies = [CommonDeps::class]
 )
 @Singleton
