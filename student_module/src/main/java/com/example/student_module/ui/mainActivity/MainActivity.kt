@@ -20,7 +20,7 @@ import com.example.student_module.R
 import com.example.student_module.di.StudentApplication
 import com.example.student_module.ui.firebaseService.FirebaseService
 import com.example.student_module.ui.navigation.NavGraphStudent
-import com.example.student_module.ui.theme.AppTheme
+import com.example.common_module.ui.theme.AppTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

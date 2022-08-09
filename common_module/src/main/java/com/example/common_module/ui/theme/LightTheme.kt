@@ -1,7 +1,11 @@
-package com.example.student_module.ui.theme
+package com.example.common_module.ui.theme
 
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
+import com.example.common_module.ui.theme.Red800
+import com.example.common_module.ui.theme.pink_700
+import com.example.common_module.ui.theme.pink_800
+import com.example.common_module.ui.theme.pink_900
 
 val LightColors = lightColors(
     primary = pink_700,

@@ -1,4 +1,4 @@
-package com.example.student_module.ui.theme
+package com.example.common_module.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

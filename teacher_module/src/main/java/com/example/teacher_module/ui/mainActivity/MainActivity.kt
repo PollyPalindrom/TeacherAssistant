@@ -16,7 +16,7 @@ import androidx.compose.material.Surface
 import androidx.navigation.compose.rememberNavController
 import com.example.common_module.common.*
 import com.example.common_module.ui.mainActivity.MainActivityViewModel
-import com.example.student_module.ui.theme.AppTheme
+import com.example.common_module.ui.theme.AppTheme
 import com.example.teacher_module.R
 import com.example.teacher_module.di.TeacherApplication
 import com.example.teacher_module.ui.firebaseService.FirebaseService
