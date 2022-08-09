@@ -19,7 +19,7 @@ import com.example.common_module.R
 @Composable
 fun CustomTopBar(
     savePicture: (() -> Unit)? = null,
-    navController:NavHostController
+    navController: NavHostController
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     TopAppBar(
@@ -30,7 +30,7 @@ fun CustomTopBar(
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(id = R.string.back_button_description)
                     )
                 }
             }
@@ -53,7 +53,7 @@ fun CustomTopBar(
                                     Icons.Filled.Save,
                                     stringResource(id = R.string.download_button_description)
                                 )
-                                Text("Save")
+                                Text(stringResource(id = R.string.save_button_text))
                             }
                         }
                     }

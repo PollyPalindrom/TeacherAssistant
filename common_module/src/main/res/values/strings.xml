@@ -48,4 +48,8 @@
     <string name="delete_picture_button_description">Delete picture</string>
 
     <string name="delete_student_from_group_button_description">Delete student from group</string>
+
+    <string name="save_button_text">Save</string>
+
+    <string name="back_button_description">Back</string>
 </resources>
