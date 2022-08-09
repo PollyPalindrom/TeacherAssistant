@@ -74,12 +74,13 @@ fun NavGraphStudent(
                 groupId = it.arguments?.getString(Constants.GROUP_ID),
                 viewModel = daggerViewModel {
                     appComponent.getStudentsViewModel()
-                }
+                },
+                navController = navController
             )
         }
         val component = DaggerCommonComponent.builder().deps(deps).build()
         composable(route = Screen.SignInScreen.route) {
-            SignInScreen(listener = signInListener, Constants.STUDENT)
+            SignInScreen(listener = signInListener, Constants.STUDENT, navController)
         }
         composable(
             route = Screen.PictureScreen.route +
@@ -92,7 +93,8 @@ fun NavGraphStudent(
             PictureScreen(
                 viewModel,
                 uri = Uri.parse(it.arguments?.getString(Constants.URI)),
-                downloadPictureListener = downloadPictureListener
+                downloadPictureListener = downloadPictureListener,
+                navController
             )
         }
         composable(route = Screen.WelcomeScreen.route) {
@@ -116,7 +118,8 @@ fun NavGraphStudent(
             CommentScreen(
                 viewModel,
                 groupId = it.arguments?.getString(Constants.GROUP_ID),
-                noteId = it.arguments?.getString(Constants.NOTE_ID)
+                noteId = it.arguments?.getString(Constants.NOTE_ID),
+                navController
             )
         }
     }

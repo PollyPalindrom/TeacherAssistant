@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.common_module.common.Constants
 import com.example.common_module.common.Screen
 import com.example.common_module.ui.customTopBar.CustomTopBar
@@ -40,7 +41,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 @SuppressLint("StateFlowValueCalledInComposition", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TeacherMainScreen(
-    navController: NavController,
+    navController: NavHostController,
     MainViewModel: MainViewModel,
     TeacherViewModel: TeacherMainViewModel
 ) {
@@ -64,7 +65,7 @@ fun TeacherMainScreen(
             Constants.COLLECTION_SECOND_PATH
         )
     })
-    Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar(navController = navController) }, floatingActionButton = {
         FloatingActionButton(onClick = { groupDialog = !groupDialog }) {
             Icon(
                 Icons.Filled.Add,

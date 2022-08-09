@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.common_module.R
 import com.example.common_module.common.Constants
 import com.example.common_module.ui.customTopBar.CustomTopBar
@@ -25,7 +26,8 @@ import com.example.common_module.ui.customTopBar.CustomTopBar
 fun CommentScreen(
     viewModel: CommentViewModel,
     groupId: String?,
-    noteId: String?
+    noteId: String?,
+    navController: NavHostController
 ) {
 
     val state = viewModel.commentListOpen.value
@@ -45,12 +47,12 @@ fun CommentScreen(
         )
     }
     Scaffold(scaffoldState = scaffoldState, topBar = {
-        CustomTopBar()
+        CustomTopBar(navController = navController)
     }, bottomBar = {
         Column {
             if (reply) {
                 Row {
-                    Text("reply to $addressee",modifier = Modifier.weight(1f))
+                    Text("reply to $addressee", modifier = Modifier.weight(1f))
                     IconButton(onClick = {
                         reply = false
                         addressee = ""

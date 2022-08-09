@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.common_module.common.DownloadPictureListener
 import com.example.common_module.ui.customTopBar.CustomTopBar
@@ -18,7 +19,8 @@ import com.example.common_module.ui.customTopBar.CustomTopBar
 fun PictureScreen(
     viewModel: PictureViewModel,
     uri: Uri,
-    downloadPictureListener: DownloadPictureListener
+    downloadPictureListener: DownloadPictureListener,
+    navController:NavHostController
 ) {
     Scaffold(topBar = {
         CustomTopBar(savePicture = {
@@ -26,7 +28,7 @@ fun PictureScreen(
                 downloadPictureListener,
                 uri
             )
-        })
+        }, navController = navController)
     }) {
         Image(
             painter = rememberAsyncImagePainter(uri),

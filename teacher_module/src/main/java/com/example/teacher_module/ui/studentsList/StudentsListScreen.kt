@@ -9,6 +9,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.common_module.common.Constants
 import com.example.common_module.ui.customTopBar.CustomTopBar
 import com.example.common_module.ui.studentsList.StudentItem
@@ -17,7 +18,8 @@ import com.example.common_module.ui.studentsList.StudentItem
 @Composable
 fun StudentsListScreen(
     viewModel: StudentsViewModel,
-    groupId: String?
+    groupId: String?,
+    navController:NavHostController
 ) {
     val state = viewModel.studentsListOpen.value
     val scaffoldState = rememberScaffoldState()
@@ -31,7 +33,7 @@ fun StudentsListScreen(
         )
     }
 
-    Scaffold(topBar = { CustomTopBar() }, scaffoldState = scaffoldState) {
+    Scaffold(topBar = { CustomTopBar(navController = navController) }, scaffoldState = scaffoldState) {
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
             items(state.students) { student ->
                 StudentItem(student, delete = {

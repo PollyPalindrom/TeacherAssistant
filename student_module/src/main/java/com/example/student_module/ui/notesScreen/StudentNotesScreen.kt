@@ -45,7 +45,7 @@ fun StudentNotesScreen(
             Constants.COLLECTION_THIRD_PATH
         )
     }
-    Scaffold(topBar = { CustomTopBar() }, scaffoldState = scaffoldState) {
+    Scaffold(topBar = { CustomTopBar(navController = navHostController) }, scaffoldState = scaffoldState) {
         LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
             if (state != null) {
                 items(state.notes) { note ->

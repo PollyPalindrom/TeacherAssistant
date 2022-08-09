@@ -1,18 +1,12 @@
 package com.example.common_module.ui.navigation
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.common_module.common.DownloadPictureListener
-import com.example.common_module.common.Screen
-import com.example.common_module.common.SignInListener
-import com.example.common_module.common.daggerViewModel
+import com.example.common_module.common.*
 import com.example.common_module.di.DaggerCommonComponent
 import com.example.common_module.di.commonDepsProvider
 import com.example.common_module.ui.commentScreen.CommentScreen
@@ -41,11 +35,11 @@ fun NavGraph(
     ) {
         val component = DaggerCommonComponent.builder().deps(deps).build()
         composable(route = Screen.SignInScreen.route) {
-            SignInScreen(listener = signInListener, status)
+            SignInScreen(listener = signInListener, status, navController)
         }
         composable(
             route = Screen.PictureScreen.route +
-                    "?${com.example.common_module.common.Constants.URI}={${com.example.common_module.common.Constants.URI}}"
+                    "?${Constants.URI}={${Constants.URI}}"
         ) {
             val viewModel: PictureViewModel = daggerViewModel {
                 component.getPictureViewModel()
@@ -53,8 +47,9 @@ fun NavGraph(
 
             PictureScreen(
                 viewModel,
-                uri = Uri.parse(it.arguments?.getString(com.example.common_module.common.Constants.URI)),
-                downloadPictureListener = downloadPictureListener
+                uri = Uri.parse(it.arguments?.getString(Constants.URI)),
+                downloadPictureListener = downloadPictureListener,
+                navController
             )
         }
         composable(route = Screen.WelcomeScreen.route) {
@@ -70,15 +65,16 @@ fun NavGraph(
         }
         composable(
             route = Screen.CommentsScreen.route +
-                    "?${com.example.common_module.common.Constants.NOTE_ID}={${com.example.common_module.common.Constants.NOTE_ID}}&${com.example.common_module.common.Constants.GROUP_ID}={${com.example.common_module.common.Constants.GROUP_ID}}"
+                    "?${Constants.NOTE_ID}={${Constants.NOTE_ID}}&${Constants.GROUP_ID}={${Constants.GROUP_ID}}"
         ) {
             val viewModel: CommentViewModel = daggerViewModel {
                 component.getCommentViewModel()
             }
             CommentScreen(
                 viewModel,
-                groupId = it.arguments?.getString(com.example.common_module.common.Constants.GROUP_ID),
-                noteId = it.arguments?.getString(com.example.common_module.common.Constants.NOTE_ID)
+                groupId = it.arguments?.getString(Constants.GROUP_ID),
+                noteId = it.arguments?.getString(Constants.NOTE_ID),
+                navController
             )
         }
     }

@@ -49,7 +49,7 @@ fun TeacherNotesScreen(
             Constants.COLLECTION_THIRD_PATH
         )
     }
-    Scaffold(topBar = { CustomTopBar() }, floatingActionButton = {
+    Scaffold(topBar = { CustomTopBar(navController = navHostController) }, floatingActionButton = {
         FloatingActionButton(
             onClick = { noteDialog = !noteDialog }
         ) {

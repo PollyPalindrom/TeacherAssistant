@@ -44,7 +44,7 @@ fun EntryImage(
     }
 
     Scaffold(topBar = {
-        CustomTopBar()
+        CustomTopBar(navController = navController)
     }) {
         ConstraintLayout(
             modifier = Modifier

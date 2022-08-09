@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.example.common_module.R
 import com.example.common_module.common.SignInListener
 import com.example.common_module.ui.customTopBar.CustomTopBar
@@ -17,10 +18,11 @@ import com.example.common_module.ui.customTopBar.CustomTopBar
 @Composable
 fun SignInScreen(
     listener: SignInListener,
-    status: String
+    status: String,
+    navController:NavHostController
 ) {
 
-    Scaffold(topBar = { CustomTopBar() }, modifier = Modifier.fillMaxSize()) {
+    Scaffold(topBar = { CustomTopBar(navController = navController) }, modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (teacherButton, text, studentButton) = createRefs()
             Text(
